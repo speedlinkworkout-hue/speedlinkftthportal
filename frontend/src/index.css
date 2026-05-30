@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Speedlink Premium Brand Tokens ── */
+    --color-primary:        #0b1b3d;
+    --color-primary-light:  #1d4ed8;
+    --color-accent:         #10b981;
+    --color-accent-light:   #d1fae5;
+    --color-teal:           #14b8a6;
+    --color-warning:        #f59e0b;
+    --color-danger:         #ef4444;
+    --color-surface:        #ffffff;
+    --color-bg:             #f8fafc;
+    --color-border:         #e2e8f0;
+    --color-text-primary:   #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-muted:     #94a3b8;
+
+    /* ── shadcn/ui CSS Variables ── */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 152 76% 39%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 152 76% 39%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+
+    --radius: 1rem;
+
+    --chart-1: 152 76% 39%;
+    --chart-2: 175 100% 38%;
+    --chart-3: 221 83% 53%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 84% 60%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 152 76% 39%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 152 76% 39%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 224 76% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* Premium Glassmorphism */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+  }
+  
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-lg border border-white/10 shadow-2xl;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl dark:bg-black/40 dark:border-white/10;
+  }
+
+  /* JetBrains Mono for numeric/data display */
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Safe area padding for iOS home bar */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Scrollbar styling */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: theme('colors.slate.300');
+    border-radius: 9999px;
+  }
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: theme('colors.slate.700');
+  }
+
+  /* Animations */
+  @keyframes fade-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes gradient-xy {
+    0%, 100% {
+      background-size: 400% 400%;
+      background-position: 0% 0%;
+    }
+    50% {
+      background-size: 200% 200%;
+      background-position: 100% 100%;
+    }
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  
+  .animate-gradient {
+    animation: gradient-xy 15s ease infinite;
+  }
+
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+  .animate-delay-2000 { animation-delay: 2s; }
+
+  /* Ring fill for progress */
+  @keyframes ring-fill {
+    from { stroke-dashoffset: 251.2; }
+  }
+  .ring-animate {
+    animation: ring-fill 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Checkmark animation */
+  @keyframes check-draw {
+    from { stroke-dashoffset: 100; }
+    to { stroke-dashoffset: 0; }
+  }
+  .check-animate {
+    animation: check-draw 0.6s cubic-bezier(0.16, 1, 0.3, 1) both 0.2s;
+  }
+}
