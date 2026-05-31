@@ -23,7 +23,7 @@ import { PlanStatusBadge } from '@/components/common/PlanStatusBadge';
 import { AlertBanner } from '@/components/common/AlertBanner';
 import { WalletBalanceWidget } from '@/components/dashboard/WalletBalanceWidget';
 import { mockPlanQueue, mockAvailablePlans } from '@/lib/mock/mockPlans';
-import { mockDailyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
+import { mockMonthlyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
 import { mockWallet } from '@/lib/mock/mockWallet';
 import { PlanStatus } from '@/types/plan.types';
 
@@ -121,6 +121,8 @@ const recentActivity: ActivityItem[] = [
     time: '7 days ago',
   },
 ];
+
+const recentMonthlyUsage = mockMonthlyUsage.slice(-6);
 
 export function DashboardPage() {
   const { user } = useAuthStore();
@@ -341,23 +343,23 @@ export function DashboardPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="font-heading font-semibold text-[#0D1B2E] text-base">
-                Usage Last 7 Days
+                Usage by Month
               </h3>
               <p className="text-xs text-[#94A3B8] mt-0.5">
                 Total:{' '}
                 <span className="font-mono font-semibold text-[#0D1B2E]">
-                  {mockDailyUsage.reduce((s, d) => s + d.downloadGb, 0).toFixed(1)} GB
+                  {recentMonthlyUsage.reduce((s, d) => s + d.downloadGb, 0).toFixed(1)} GB
                 </span>{' '}
-                downloaded
+                downloaded in 6 months
               </p>
             </div>
           </div>
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockDailyUsage} barSize={28}>
+              <BarChart data={recentMonthlyUsage} barSize={28}>
                 <CartesianGrid vertical={false} stroke="#F1F5F9" />
                 <XAxis
-                  dataKey="date"
+                  dataKey="month"
                   tick={{ fontSize: 11, fill: '#94A3B8', fontFamily: 'Outfit' }}
                   axisLine={false}
                   tickLine={false}
@@ -374,7 +376,7 @@ export function DashboardPage() {
                   dataKey="downloadGb"
                   fill="#00A86B"
                   radius={[6, 6, 0, 0]}
-                  aria-label="Daily download usage"
+                  aria-label="Monthly download usage"
                 />
               </BarChart>
             </ResponsiveContainer>

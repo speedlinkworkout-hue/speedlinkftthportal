@@ -11,10 +11,10 @@ import {
 import { ArrowDown, ArrowUp, RefreshCw, Clock } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SkeletonCard } from '@/components/common/SkeletonCard';
-import { mockDailyUsage, mockHourlyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
+import { mockMonthlyUsage, mockHourlyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
 
 
-type Period = 'Daily' | 'Weekly' | 'Monthly';
+type Period = 'Daily' | 'Monthly';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -46,11 +46,10 @@ interface UsageRow {
   planActive: string;
 }
 
-const usageTableData: UsageRow[] = mockDailyUsage.map((d) => ({
-  date: new Date(d.fullDate).toLocaleDateString('en-GB', {
-    weekday: 'short',
-    day: 'numeric',
+const usageTableData: UsageRow[] = mockMonthlyUsage.map((d) => ({
+  date: new Date(`${d.monthKey}-01`).toLocaleDateString('en-GB', {
     month: 'short',
+    year: 'numeric',
   }),
   download: d.downloadGb,
   upload: d.uploadGb,
@@ -59,7 +58,7 @@ const usageTableData: UsageRow[] = mockDailyUsage.map((d) => ({
 })).reverse();
 
 export function UsagePage() {
-  const [period, setPeriod] = useState<Period>('Daily');
+  const [period, setPeriod] = useState<Period>('Monthly');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading] = useState(false);
 
@@ -67,8 +66,8 @@ export function UsagePage() {
     label: h.hour,
     download: h.downloadGb,
     upload: h.uploadGb,
-  })) : mockDailyUsage.map((d) => ({
-    label: d.date,
+  })) : mockMonthlyUsage.map((d) => ({
+    label: d.month,
     download: d.downloadGb,
     upload: d.uploadGb,
   }));
@@ -78,7 +77,7 @@ export function UsagePage() {
     setTimeout(() => setIsRefreshing(false), 1500);
   }
 
-  const periods: Period[] = ['Daily', 'Weekly', 'Monthly'];
+  const periods: Period[] = ['Daily', 'Monthly'];
 
   return (
     <div className="p-5 lg:p-8 max-w-screen-xl mx-auto space-y-6">
@@ -168,7 +167,7 @@ export function UsagePage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
             <h3 className="font-heading font-semibold text-[#0D1B2E] text-base">Usage Overview</h3>
-            <p className="text-xs text-[#94A3B8] mt-0.5">Download and upload trends</p>
+            <p className="text-xs text-[#94A3B8] mt-0.5">Download and upload trends by month</p>
           </div>
 
           {/* Period toggle */}
@@ -260,7 +259,7 @@ export function UsagePage() {
       <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden animate-fade-up animate-delay-400">
         <div className="px-5 py-4 border-b border-[#E2E8F0]">
           <h3 className="font-heading font-semibold text-[#0D1B2E] text-base">Usage History</h3>
-          <p className="text-xs text-[#94A3B8] mt-0.5">Last 7 days — newest first</p>
+          <p className="text-xs text-[#94A3B8] mt-0.5">Last 12 months — newest first</p>
         </div>
 
         {/* Desktop table */}

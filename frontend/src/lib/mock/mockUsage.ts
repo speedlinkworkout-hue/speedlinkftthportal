@@ -1,6 +1,6 @@
-export interface DailyUsage {
-  date: string;       // 'Mon', 'Tue', etc.
-  fullDate: string;   // ISO date string
+export interface MonthlyUsage {
+  month: string;      // 'Jan', 'Feb', etc.
+  monthKey: string;   // YYYY-MM
   downloadGb: number;
   uploadGb: number;
 }
@@ -12,14 +12,19 @@ export interface HourlyUsage {
 }
 
 
-export const mockDailyUsage: DailyUsage[] = [
-  { date: 'Mon', fullDate: '2026-05-19', downloadGb: 4.2,  uploadGb: 0.9 },
-  { date: 'Tue', fullDate: '2026-05-20', downloadGb: 6.8,  uploadGb: 1.4 },
-  { date: 'Wed', fullDate: '2026-05-21', downloadGb: 3.1,  uploadGb: 0.6 },
-  { date: 'Thu', fullDate: '2026-05-22', downloadGb: 8.5,  uploadGb: 2.1 },
-  { date: 'Fri', fullDate: '2026-05-23', downloadGb: 11.2, uploadGb: 2.8 },
-  { date: 'Sat', fullDate: '2026-05-24', downloadGb: 15.6, uploadGb: 3.5 },
-  { date: 'Sun', fullDate: '2026-05-25', downloadGb: 9.4,  uploadGb: 2.0 },
+export const mockMonthlyUsage: MonthlyUsage[] = [
+  { month: 'Jan', monthKey: '2026-01', downloadGb: 112.4, uploadGb: 19.8 },
+  { month: 'Feb', monthKey: '2026-02', downloadGb: 128.6, uploadGb: 22.1 },
+  { month: 'Mar', monthKey: '2026-03', downloadGb: 121.3, uploadGb: 20.7 },
+  { month: 'Apr', monthKey: '2026-04', downloadGb: 139.5, uploadGb: 24.2 },
+  { month: 'May', monthKey: '2026-05', downloadGb: 146.2, uploadGb: 25.6 },
+  { month: 'Jun', monthKey: '2026-06', downloadGb: 151.8, uploadGb: 27.0 },
+  { month: 'Jul', monthKey: '2026-07', downloadGb: 158.1, uploadGb: 28.5 },
+  { month: 'Aug', monthKey: '2026-08', downloadGb: 149.7, uploadGb: 26.4 },
+  { month: 'Sep', monthKey: '2026-09', downloadGb: 141.0, uploadGb: 24.9 },
+  { month: 'Oct', monthKey: '2026-10', downloadGb: 154.6, uploadGb: 27.8 },
+  { month: 'Nov', monthKey: '2026-11', downloadGb: 160.2, uploadGb: 29.1 },
+  { month: 'Dec', monthKey: '2026-12', downloadGb: 167.4, uploadGb: 30.3 },
 ];
 
 
