@@ -1,11 +1,21 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, LayoutDashboard, CreditCard, Headphones, UserCog, CircleAlert, Mail, ShieldCheck, Zap, Lock } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { ArrowRight, LayoutDashboard, CircleAlert, Mail, ShieldCheck, Zap, Lock, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAccountStore } from '@/stores/account.store';
 import { defaultAccountId, mockAccounts } from '@/lib/mock/mockAccounts';
-import { accessProfiles, buildLoginUser, getAccessProfileByEmail, getRoleLandingPath } from '@/lib/auth/access-control';
+import { buildLoginUser, getAccessProfileByEmail, getRoleLandingPath } from '@/lib/auth/access-control';
 import { useToast } from '@/hooks/use-toast';
+
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+type LoginValues = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -13,37 +23,41 @@ export function LoginPage() {
   const login = useAuthStore((state) => state.login);
   const setAccounts = useAccountStore((state) => state.setAccounts);
   const setActiveAccount = useAccountStore((state) => state.setActiveAccount);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [logoLoadFailed, setLogoLoadFailed] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
+
+  const email = watch('email');
   const profile = useMemo(() => getAccessProfileByEmail(email), [email]);
 
-  function handleLogin() {
-    if (!email || !password) {
-      toast({
-        title: 'Credentials Required',
-        description: 'Please enter both an email address and a password.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (password !== '1234567890') {
+  async function onSubmit(values: LoginValues) {
+    if (values.password !== '1234567890') {
       toast({
         title: 'Invalid Password',
         description: 'The password you entered is incorrect.',
-        variant: 'destructive',
+        variant: 'error',
       });
       return;
     }
 
-    const user = buildLoginUser(email);
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    const user = buildLoginUser(values.email);
 
     if (!user) {
       toast({
         title: 'Unknown email',
         description: 'You do not have an active account associated with this email.',
-        variant: 'destructive',
+        variant: 'error',
       });
       return;
     }
@@ -55,6 +69,7 @@ export function LoginPage() {
     toast({
       title: 'Access granted',
       description: `Welcome back, ${user.firstName}.`,
+      variant: 'success',
     });
 
     navigate(getRoleLandingPath(user.role), { replace: true });
@@ -87,6 +102,7 @@ export function LoginPage() {
                       alt="Speedlink logo"
                       onError={() => setLogoLoadFailed(true)}
                       className="h-full w-full object-contain p-0"
+                      loading="lazy"
                     />
                   ) : (
                     <Zap className="h-12 w-12 text-accent-light" />
@@ -129,10 +145,7 @@ export function LoginPage() {
               </div>
 
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleLogin();
-                }}
+                onSubmit={handleSubmit(onSubmit)}
                 className="space-y-6"
               >
                 <div className="space-y-4">
@@ -145,12 +158,12 @@ export function LoginPage() {
                       <input
                         id="email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        {...register('email')}
                         placeholder="e.g. name@company.com"
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900"
+                        className={`w-full rounded-2xl border ${errors.email ? 'border-danger focus:ring-danger/10' : 'border-slate-200 focus:border-primary focus:ring-primary/10'} bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900`}
                       />
                     </div>
+                    {errors.email && <p className="text-danger text-xs font-medium">{errors.email.message}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -162,12 +175,12 @@ export function LoginPage() {
                       <input
                         id="password"
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        {...register('password')}
                         placeholder="••••••••"
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900"
+                        className={`w-full rounded-2xl border ${errors.password ? 'border-danger focus:ring-danger/10' : 'border-slate-200 focus:border-primary focus:ring-primary/10'} bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900`}
                       />
                     </div>
+                    {errors.password && <p className="text-danger text-xs font-medium">{errors.password.message}</p>}
                   </div>
                 </div>
 
@@ -186,7 +199,7 @@ export function LoginPage() {
                   )}
                 </div>
 
-                {email && !profile && (
+                {email && !profile && !errors.email && (
                   <div className="animate-fade-up rounded-2xl border border-danger/20 bg-danger/5 p-4 dark:bg-danger/10">
                     <div className="flex items-start gap-3">
                       <CircleAlert className="mt-0.5 h-5 w-5 text-danger" />
@@ -200,10 +213,15 @@ export function LoginPage() {
 
                 <button
                   type="submit"
-                  className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-primary px-6 py-4 text-sm font-bold text-white shadow-xl shadow-primary/20 transition-all hover:bg-primary-light hover:shadow-primary/30 hover:-translate-y-0.5"
+                  disabled={isSubmitting}
+                  className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-primary px-6 py-4 text-sm font-bold text-white shadow-xl shadow-primary/20 transition-all hover:bg-primary-light hover:shadow-primary/30 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <span className="relative z-10">Access Portal</span>
-                  <ArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <span className="relative z-10">{isSubmitting ? 'Verifying...' : 'Access Portal'}</span>
+                  {isSubmitting ? (
+                    <Loader2 className="relative z-10 h-4 w-4 animate-spin" />
+                  ) : (
+                    <ArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  )}
                   <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                 </button>
               </form>

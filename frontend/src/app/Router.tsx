@@ -1,17 +1,34 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import { ProtectedRoute } from '../components/layout/ProtectedRoute';
 import { AuthLayout } from '../components/layout/AuthLayout';
 import { UserRole } from '../types/user.types';
 import { StubPage } from '../components/common/StubPage';
-import { LoginPage } from '@/features/auth/pages/LoginPage';
-import { DashboardPage } from '@/features/dashboard/pages/DashboardPage';
-import { PlansPage } from '@/features/plans/pages/PlansPage';
-import { UsagePage } from '@/features/usage/pages/UsagePage';
-import { WalletPage } from '@/features/wallet/pages/WalletPage';
-import { TicketsPage } from '@/features/tickets/pages/TicketsPage';
-import { NewTicketPage } from '@/features/tickets/pages/NewTicketPage';
-import { TicketDetailPage } from '@/features/tickets/pages/TicketDetailPage';
-import { AccountSettingsPage } from '@/features/accounts/pages/AccountSettingsPage';
+import { Loader2 } from 'lucide-react';
+
+const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage').then(m => ({ default: m.LoginPage })));
+const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const PlansPage = lazy(() => import('@/features/plans/pages/PlansPage').then(m => ({ default: m.PlansPage })));
+const UsagePage = lazy(() => import('@/features/usage/pages/UsagePage').then(m => ({ default: m.UsagePage })));
+const WalletPage = lazy(() => import('@/features/wallet/pages/WalletPage').then(m => ({ default: m.WalletPage })));
+const TicketsPage = lazy(() => import('@/features/tickets/pages/TicketsPage').then(m => ({ default: m.TicketsPage })));
+const TicketNewPage = lazy(() => import('@/features/tickets/pages/TicketNewPage').then(m => ({ default: m.TicketNewPage })));
+const TicketDetailPage = lazy(() => import('@/features/tickets/pages/TicketDetailPage').then(m => ({ default: m.TicketDetailPage })));
+const AccountSettingsPage = lazy(() => import('@/features/accounts/pages/AccountSettingsPage').then(m => ({ default: m.AccountSettingsPage })));
+
+function SuspenseWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      {children}
+    </Suspense>
+  );
+}
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +37,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <AuthLayout><LoginPage /></AuthLayout>,
+    element: <AuthLayout><SuspenseWrapper><LoginPage /></SuspenseWrapper></AuthLayout>,
   },
   {
     path: '/verify-otp',
@@ -29,16 +46,16 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedRoute allowedRoles={[UserRole.CUSTOMER]} />,
     children: [
-      { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/plans', element: <PlansPage /> },
-      { path: '/plans/:planId', element: <PlansPage /> },
-      { path: '/wallet', element: <WalletPage /> },
+      { path: '/dashboard', element: <SuspenseWrapper><DashboardPage /></SuspenseWrapper> },
+      { path: '/plans', element: <SuspenseWrapper><PlansPage /></SuspenseWrapper> },
+      { path: '/plans/:planId', element: <SuspenseWrapper><PlansPage /></SuspenseWrapper> },
+      { path: '/wallet', element: <SuspenseWrapper><WalletPage /></SuspenseWrapper> },
       { path: '/billing', element: <Navigate to="/wallet" replace /> },
-      { path: '/usage', element: <UsagePage /> },
-      { path: '/tickets', element: <TicketsPage /> },
-      { path: '/tickets/new', element: <NewTicketPage /> },
-      { path: '/tickets/:ticketId', element: <TicketDetailPage /> },
-      { path: '/account/settings', element: <AccountSettingsPage /> },
+      { path: '/usage', element: <SuspenseWrapper><UsagePage /></SuspenseWrapper> },
+      { path: '/tickets', element: <SuspenseWrapper><TicketsPage /></SuspenseWrapper> },
+      { path: '/tickets/new', element: <SuspenseWrapper><TicketNewPage /></SuspenseWrapper> },
+      { path: '/tickets/:ticketId', element: <SuspenseWrapper><TicketDetailPage /></SuspenseWrapper> },
+      { path: '/account/settings', element: <SuspenseWrapper><AccountSettingsPage /></SuspenseWrapper> },
     ],
   },
   {
