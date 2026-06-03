@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useRef, useCallback, type ReactNode } from 'react';
 import { CheckCircle2, Info, TriangleAlert, XCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -66,12 +66,17 @@ function variantIcon(variant: ToastVariant) {
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const timeoutsRef = useRef(new Map<string, number>());
 
-  const dismiss = (id: string) => {
+  const dismiss = useCallback((id: string) => {
+    if (timeoutsRef.current.has(id)) {
+      clearTimeout(timeoutsRef.current.get(id));
+      timeoutsRef.current.delete(id);
+    }
     setToasts((current) => current.filter((toast) => toast.id !== id));
-  };
+  }, []);
 
-  const toast = (options: ToastOptions) => {
+  const toast = useCallback((options: ToastOptions) => {
     const id = options.id ?? createId();
     const item: ToastItem = {
       id,
@@ -84,11 +89,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((current) => [item, ...current].slice(0, 4));
 
     const duration = options.duration ?? 4500;
-    window.setTimeout(() => dismiss(id), duration);
+    const timeoutId = window.setTimeout(() => dismiss(id), duration);
+    timeoutsRef.current.set(id, timeoutId);
+    
     return id;
-  };
+  }, [dismiss]);
 
-  const value = useMemo(() => ({ toasts, toast, dismiss }), [toasts]);
+  useEffect(() => {
+    const timeouts = timeoutsRef.current;
+    return () => {
+      timeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+      timeouts.clear();
+    };
+  }, []);
+
+  const value = useMemo(() => ({ toasts, toast, dismiss }), [toasts, toast, dismiss]);
 
   return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>;
 }

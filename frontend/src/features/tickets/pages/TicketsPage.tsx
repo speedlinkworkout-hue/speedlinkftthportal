@@ -1,23 +1,21 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, MailOpen, Clock, AlertCircle } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { EmptyState } from '@/components/common/EmptyState';
 import { mockTickets } from '@/lib/mock/mockTickets';
 import { TicketCategory, TicketStatus } from '@/types/ticket.types';
-import { useToast } from '@/hooks/use-toast';
-
-// TODO: replace with useQuery hook
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 type StatusFilter = 'All' | 'Open' | 'In Progress' | 'Resolved';
 type CategoryFilter = 'All' | TicketCategory;
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-GB', {
+  return new Intl.DateTimeFormat(undefined, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-  });
+  }).format(new Date(dateStr));
 }
 
 const statusConfig: Record<TicketStatus, { label: string; color: string; bgColor: string }> = {
@@ -29,7 +27,6 @@ const statusConfig: Record<TicketStatus, { label: string; color: string; bgColor
 
 function TicketStatusBadge({ status }: { status: TicketStatus }) {
   const config = statusConfig[status];
-  const isBlue = status === TicketStatus.IN_PROGRESS;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${config.bgColor} ${config.color}`}>
       {status === TicketStatus.OPEN && <AlertCircle className="w-3 h-3" />}
@@ -51,6 +48,7 @@ export function TicketsPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('All');
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('All');
   const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const filteredTickets = mockTickets.filter((ticket) => {
     const sMatch =
@@ -62,6 +60,13 @@ export function TicketsPage() {
     const cMatch = categoryFilter === 'All' || ticket.category === categoryFilter;
 
     return sMatch && cMatch;
+  });
+
+  const rowVirtualizer = useVirtualizer({
+    count: filteredTickets.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 160,
+    overscan: 5,
   });
 
   return (
@@ -136,58 +141,82 @@ export function TicketsPage() {
           />
         </div>
       ) : (
-        <div className="space-y-4">
-          {filteredTickets.map((ticket, i) => (
-            <div
-              key={ticket.id}
-              onClick={() => navigate(`/tickets/${ticket.id}`)}
-              className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-5 hover:border-[#0F2B5B]/30 hover:shadow-md transition-all cursor-pointer animate-fade-up"
-              style={{ animationDelay: `${i * 50}ms` }}
-              role="article"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && navigate(`/tickets/${ticket.id}`)}
-            >
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-1">
-                    <span className="font-mono text-sm font-semibold text-[#0F2B5B]">#{ticket.id}</span>
-                    <span className="w-1 h-1 rounded-full bg-[#E2E8F0]" aria-hidden="true" />
-                    <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider bg-[#F5F7FA] px-2 py-0.5 rounded-md">
-                      {ticket.category.toLowerCase()}
-                    </span>
-                  </div>
-                  <h3 className="font-heading font-semibold text-[#0D1B2E] text-base sm:text-lg truncate">
-                    {ticket.subject}
-                  </h3>
-                </div>
-                <div className="shrink-0">
-                  <TicketStatusBadge status={ticket.status} />
-                </div>
-              </div>
+        <div
+          ref={scrollRef}
+          className="max-h-[600px] overflow-auto rounded-2xl w-full scroll-smooth"
+        >
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const ticket = filteredTickets[virtualRow.index];
+              return (
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={rowVirtualizer.measureElement}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                  className="pb-4"
+                >
+                  <button
+                    onClick={() => navigate(`/tickets/${ticket.id}`)}
+                    className="w-full text-left bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-5 hover:border-[#0F2B5B]/30 hover:shadow-md transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#0F2B5B]"
+                    aria-label={`View details for ticket ${ticket.subject}`}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-1">
+                          <span className="font-mono text-sm font-semibold text-[#0F2B5B]">#{ticket.id}</span>
+                          <span className="w-1 h-1 rounded-full bg-[#E2E8F0]" aria-hidden="true" />
+                          <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider bg-[#F5F7FA] px-2 py-0.5 rounded-md">
+                            {ticket.category.toLowerCase()}
+                          </span>
+                        </div>
+                        <h3 className="font-heading font-semibold text-[#0D1B2E] text-base sm:text-lg truncate">
+                          {ticket.subject}
+                        </h3>
+                      </div>
+                      <div className="shrink-0">
+                        <TicketStatusBadge status={ticket.status} />
+                      </div>
+                    </div>
 
-              <div className="flex items-center gap-4 text-xs text-[#64748B] mb-4">
-                <div className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-                  Opened {formatDate(ticket.createdAt)}
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <MailOpen className="w-3.5 h-3.5" aria-hidden="true" />
-                  Last reply: {formatDate(ticket.updatedAt)}
-                </div>
-              </div>
+                    <div className="flex items-center gap-4 text-xs text-[#64748B] mb-4">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+                        Opened {formatDate(ticket.createdAt)}
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <MailOpen className="w-3.5 h-3.5" aria-hidden="true" />
+                        Last reply: {formatDate(ticket.updatedAt)}
+                      </div>
+                    </div>
 
-              {ticket.lastReplyPreview && (
-                <div className="pt-4 border-t border-[#F1F5F9] flex gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#F5F7FA] flex items-center justify-center shrink-0">
-                    <span className="text-[10px] font-bold text-[#64748B]">You</span>
-                  </div>
-                  <p className="text-sm text-[#64748B] truncate flex-1 leading-6">
-                    "{ticket.lastReplyPreview}"
-                  </p>
+                    {ticket.lastReplyPreview && (
+                      <div className="pt-4 border-t border-[#F1F5F9] flex gap-3">
+                        <div className="w-6 h-6 rounded-full bg-[#F5F7FA] flex items-center justify-center shrink-0">
+                          <span className="text-[10px] font-bold text-[#64748B]">You</span>
+                        </div>
+                        <p className="text-sm text-[#64748B] truncate flex-1 leading-6">
+                          "{ticket.lastReplyPreview}"
+                        </p>
+                      </div>
+                    )}
+                  </button>
                 </div>
-              )}
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
