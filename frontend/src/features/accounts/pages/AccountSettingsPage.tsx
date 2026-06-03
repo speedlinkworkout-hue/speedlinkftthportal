@@ -51,7 +51,11 @@ export function AccountSettingsPage() {
                     <div className="w-20 h-20 rounded-full bg-[#00A86B] text-white flex items-center justify-center text-2xl font-bold shadow-sm">
                       {initials}
                     </div>
-                    <button className="absolute bottom-0 right-0 w-7 h-7 bg-white border border-[#E2E8F0] rounded-full flex items-center justify-center shadow-sm hover:bg-[#F5F7FA] transition-all">
+                    <button 
+                      className="absolute bottom-0 right-0 w-7 h-7 bg-white border border-[#E2E8F0] rounded-full flex items-center justify-center shadow-sm hover:bg-[#F5F7FA] transition-all"
+                      title="Update profile picture"
+                      aria-label="Update profile picture"
+                    >
                       <Camera className="w-3.5 h-3.5 text-[#0F2B5B]" />
                     </button>
                   </div>
@@ -66,24 +70,27 @@ export function AccountSettingsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-1.5 block">Full Name</label>
+                  <label htmlFor="fullName" className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-1.5 block">Full Name</label>
                   <input
+                    id="fullName"
                     type="text"
                     defaultValue={`${user?.firstName} ${user?.lastName}`}
                     className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm text-[#0D1B2E] focus:border-[#0F2B5B] focus:ring-2 focus:ring-[#0F2B5B]/10 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-1.5 block">Email Address</label>
+                  <label htmlFor="email" className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-1.5 block">Email Address</label>
                   <input
+                    id="email"
                     type="email"
                     defaultValue={user?.email}
                     className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm text-[#0D1B2E] focus:border-[#0F2B5B] focus:ring-2 focus:ring-[#0F2B5B]/10 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-1.5 block">Phone Number</label>
+                  <label htmlFor="phone" className="text-xs font-semibold text-[#64748B] uppercase tracking-wider mb-1.5 block">Phone Number</label>
                   <input
+                    id="phone"
                     type="tel"
                     defaultValue="+234 800 123 4567"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm text-[#0D1B2E] focus:border-[#0F2B5B] focus:ring-2 focus:ring-[#0F2B5B]/10 outline-none transition-all"
@@ -108,16 +115,19 @@ export function AccountSettingsPage() {
                   <input
                     type="password"
                     placeholder="Current Password"
+                    aria-label="Current Password"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:border-[#0F2B5B] focus:ring-2 focus:ring-[#0F2B5B]/10 outline-none transition-all"
                   />
                   <input
                     type="password"
                     placeholder="New Password"
+                    aria-label="New Password"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:border-[#0F2B5B] focus:ring-2 focus:ring-[#0F2B5B]/10 outline-none transition-all"
                   />
                   <input
                     type="password"
                     placeholder="Confirm New Password"
+                    aria-label="Confirm New Password"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:border-[#0F2B5B] focus:ring-2 focus:ring-[#0F2B5B]/10 outline-none transition-all"
                   />
                   <button className="px-6 py-2.5 rounded-full bg-[#00A86B] text-white text-sm font-semibold hover:bg-[#009960] transition-all">
