@@ -7,7 +7,7 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
-import LogoSrc from '../../../../speedlink logo.png';
+const LogoSrc = '/speedlink-logo.png';
 import { useAuthStore } from '@/stores/auth.store';
 import { WalletBalanceWidget } from '@/components/dashboard/WalletBalanceWidget';
 

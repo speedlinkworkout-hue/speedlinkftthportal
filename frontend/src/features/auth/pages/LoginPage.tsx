@@ -98,7 +98,7 @@ export function LoginPage() {
                 <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-transparent">
                   {!logoLoadFailed ? (
                     <img
-                      src={`/${encodeURIComponent('Speedlink logo.png')}`}
+                      src="/speedlink-logo.png"
                       alt="Speedlink logo"
                       onError={() => setLogoLoadFailed(true)}
                       className="h-full w-full object-contain p-0"

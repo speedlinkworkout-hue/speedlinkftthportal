@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { Bell } from 'lucide-react';
-import LogoSrc from '../../../../speedlink logo.png';
+const LogoSrc = '/speedlink-logo.png';
 import { useAuthStore } from '@/stores/auth.store';
 import { MultiAccountSwitcher } from '@/components/common/MultiAccountSwitcher';
 
