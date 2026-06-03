@@ -9,7 +9,7 @@ const pageTitles: Record<string, string> = {
   '/plans':           'My Plans',
   '/usage':           'Usage',
   '/wallet':          'Wallet & Billing',
-  '/tickets':         'Support Tickets',
+
   '/account/settings':'Account Settings',
 };
 

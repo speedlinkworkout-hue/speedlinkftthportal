@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
 import LogoSrc from '../../../../speedlink logo.png';
@@ -10,10 +10,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const location = useLocation();
 
-  // Close drawer on route change
   const currentPath = location.pathname;
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- Close on nav
-  void currentPath;
+
+  // Close drawer on route change
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [currentPath]);
 
   return (
     <div className="min-h-screen flex bg-[#F5F7FA]">

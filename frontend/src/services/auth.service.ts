@@ -2,11 +2,11 @@ import { apiClient } from '../lib/api/client';
 import { useAuthStore } from '../stores/auth.store';
 
 export const authService = {
-  login: async (credentials: any) => {
+  login: async (credentials: Record<string, unknown>) => {
     const response = await apiClient.post('/auth/login', credentials);
     return response.data;
   },
-  verifyOtp: async (data: any) => {
+  verifyOtp: async (data: Record<string, unknown>) => {
     const response = await apiClient.post('/auth/verify-otp', data);
     return response.data;
   },

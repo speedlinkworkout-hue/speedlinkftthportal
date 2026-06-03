@@ -16,7 +16,7 @@ export const accessProfiles: AccessProfile[] = [
     title: 'Customer',
     subtitle: 'Customer portal access',
     landingPath: '/dashboard',
-    features: ['Dashboard', 'Plans', 'Wallet & Billing', 'Usage', 'Support Tickets'],
+    features: ['Dashboard', 'Plans', 'Wallet & Billing', 'Usage'],
   },
   {
     role: UserRole.FINANCE,
@@ -32,7 +32,7 @@ export const accessProfiles: AccessProfile[] = [
     title: 'Technical Support',
     subtitle: 'Operational support and monitoring',
     landingPath: '/support',
-    features: ['Support Dashboard', 'Ticket Queue', 'Expiring Plans', 'Usage Monitor'],
+    features: ['Support Dashboard', 'Expiring Plans', 'Usage Monitor'],
   },
   {
     role: UserRole.ADMIN,

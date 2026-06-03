@@ -4,7 +4,6 @@ import {
   Layers,
   Activity,
   Wallet,
-  MessageSquare,
   Settings,
   LogOut,
 } from 'lucide-react';
@@ -23,7 +22,7 @@ const navItems: NavItem[] = [
   { label: 'My Plans',        href: '/plans',            icon: Layers },
   { label: 'Usage',           href: '/usage',            icon: Activity },
   { label: 'Wallet & Billing',href: '/wallet',           icon: Wallet },
-  { label: 'Support Tickets', href: '/tickets',          icon: MessageSquare },
+
   { label: 'Account Settings',href: '/account/settings', icon: Settings },
 ];
 

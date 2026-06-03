@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { ProtectedRoute } from '../components/layout/ProtectedRoute';
@@ -11,9 +12,7 @@ const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPag
 const PlansPage = lazy(() => import('@/features/plans/pages/PlansPage').then(m => ({ default: m.PlansPage })));
 const UsagePage = lazy(() => import('@/features/usage/pages/UsagePage').then(m => ({ default: m.UsagePage })));
 const WalletPage = lazy(() => import('@/features/wallet/pages/WalletPage').then(m => ({ default: m.WalletPage })));
-const TicketsPage = lazy(() => import('@/features/tickets/pages/TicketsPage').then(m => ({ default: m.TicketsPage })));
-const TicketNewPage = lazy(() => import('@/features/tickets/pages/TicketNewPage').then(m => ({ default: m.TicketNewPage })));
-const TicketDetailPage = lazy(() => import('@/features/tickets/pages/TicketDetailPage').then(m => ({ default: m.TicketDetailPage })));
+
 const AccountSettingsPage = lazy(() => import('@/features/accounts/pages/AccountSettingsPage').then(m => ({ default: m.AccountSettingsPage })));
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
@@ -52,9 +51,7 @@ export const router = createBrowserRouter([
       { path: '/wallet', element: <SuspenseWrapper><WalletPage /></SuspenseWrapper> },
       { path: '/billing', element: <Navigate to="/wallet" replace /> },
       { path: '/usage', element: <SuspenseWrapper><UsagePage /></SuspenseWrapper> },
-      { path: '/tickets', element: <SuspenseWrapper><TicketsPage /></SuspenseWrapper> },
-      { path: '/tickets/new', element: <SuspenseWrapper><TicketNewPage /></SuspenseWrapper> },
-      { path: '/tickets/:ticketId', element: <SuspenseWrapper><TicketDetailPage /></SuspenseWrapper> },
+
       { path: '/account/settings', element: <SuspenseWrapper><AccountSettingsPage /></SuspenseWrapper> },
     ],
   },

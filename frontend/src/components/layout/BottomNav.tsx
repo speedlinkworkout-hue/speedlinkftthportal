@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Layers,
   Wallet,
-  MessageSquare,
   UserCircle,
 } from 'lucide-react';
 
@@ -17,7 +16,7 @@ const bottomNavItems: BottomNavItem[] = [
   { label: 'Home',    href: '/dashboard', icon: LayoutDashboard },
   { label: 'Plans',   href: '/plans',     icon: Layers },
   { label: 'Wallet',  href: '/wallet',    icon: Wallet },
-  { label: 'Tickets', href: '/tickets',   icon: MessageSquare },
+
   { label: 'Account', href: '/account/settings', icon: UserCircle },
 ];
 

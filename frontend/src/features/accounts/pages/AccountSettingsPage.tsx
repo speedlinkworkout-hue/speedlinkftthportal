@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAccountStore } from '@/stores/account.store';
-import { Camera, MapPin, Smartphone, ShieldCheck, Mail, LogOut, Plus } from 'lucide-react';
+import { Camera, MapPin, Plus } from 'lucide-react';
 import { PlanStatusBadge } from '@/components/common/PlanStatusBadge';
 import { PlanStatus } from '@/types/plan.types';
 
@@ -10,7 +10,7 @@ type SettingsTab = 'Profile' | 'Security' | 'Notifications' | 'Linked Accounts';
 
 export function AccountSettingsPage() {
   const [tab, setTab] = useState<SettingsTab>('Profile');
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
   const { accounts, activeAccountId, setActiveAccount } = useAccountStore();
   const initials = user ? `${user.firstName[0]}${user.lastName[0]}` : 'U';
 
