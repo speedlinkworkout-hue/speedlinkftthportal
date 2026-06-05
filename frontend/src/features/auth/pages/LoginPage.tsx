@@ -184,32 +184,9 @@ export function LoginPage() {
                   </div>
                 </div>
 
-                {/* Profile Preview Card */}
-                <div className={`overflow-hidden rounded-2xl transition-all duration-500 ${profile ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-                  {profile && (
-                    <div className="border border-accent/20 bg-accent/5 p-4 dark:bg-accent/10">
-                      <div className="flex items-start gap-3">
-                        <ShieldCheck className="mt-0.5 h-5 w-5 text-accent" />
-                        <div>
-                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{profile.title} access detected</p>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
 
-                {email && !profile && !errors.email && (
-                  <div className="animate-fade-up rounded-2xl border border-danger/20 bg-danger/5 p-4 dark:bg-danger/10">
-                    <div className="flex items-start gap-3">
-                      <CircleAlert className="mt-0.5 h-5 w-5 text-danger" />
-                      <div>
-                        <p className="text-sm font-semibold text-danger">Unrecognized Email</p>
-                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Ensure you have an active account associated with this email.</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+
+
 
                 <button
                   type="submit"
