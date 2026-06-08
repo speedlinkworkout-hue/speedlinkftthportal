@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ArrowRight, LayoutDashboard, CircleAlert, Mail, ShieldCheck, Zap, Lock, Loader2 } from 'lucide-react';
+import { ArrowRight, LayoutDashboard, Mail, ShieldCheck, Zap, Lock, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAccountStore } from '@/stores/account.store';
 import { defaultAccountId, mockAccounts } from '@/lib/mock/mockAccounts';
@@ -36,7 +36,7 @@ export function LoginPage() {
   });
 
   const email = watch('email');
-  const profile = useMemo(() => getAccessProfileByEmail(email), [email]);
+
 
   async function onSubmit(values: LoginValues) {
     if (values.password !== '1234567890') {
