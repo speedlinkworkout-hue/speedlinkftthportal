@@ -1,5 +1,4 @@
 // import React from 'react';
-// Write the first name of the tech eevent i ernt to yestrsay 
 import styled from 'styled-components';
 
 const Button = () => {

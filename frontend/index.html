@@ -53,6 +53,15 @@
           document.documentElement.classList.toggle('dark', readTheme() === 'dark');
         }
 
+        var classObserver = new MutationObserver(function () {
+          if (
+            !isProtectedPath(window.location.pathname) &&
+            document.documentElement.classList.contains('dark')
+          ) {
+            document.documentElement.classList.remove('dark');
+          }
+        });
+
         var originalPushState = window.history.pushState;
         var originalReplaceState = window.history.replaceState;
 
@@ -69,6 +78,11 @@
         };
 
         window.addEventListener('popstate', syncThemeClass);
+        window.addEventListener('storage', syncThemeClass);
+        classObserver.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
         syncThemeClass();
       })();
     </script>
