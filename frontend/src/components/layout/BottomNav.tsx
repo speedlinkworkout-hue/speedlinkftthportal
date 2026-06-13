@@ -26,7 +26,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Bottom navigation"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#E2E8F0] lg:hidden pb-safe"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E2E8F0] bg-white transition-colors duration-200 dark:border-gray-800 dark:bg-gray-900 lg:hidden pb-safe"
     >
       <div className="flex items-stretch">
         {bottomNavItems.map((item) => {
@@ -44,7 +44,7 @@ export function BottomNav() {
               aria-current={isActive ? 'page' : undefined}
               className={[
                 'flex flex-col items-center justify-center flex-1 py-2 px-1 gap-0.5 min-h-[56px] transition-all duration-200 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#0F2B5B]',
-                isActive ? 'text-[#00A86B]' : 'text-[#94A3B8]',
+                isActive ? 'text-[#00A86B]' : 'text-[#94A3B8] dark:text-gray-500 dark:hover:text-gray-200',
               ].join(' ')}
             >
               {isActive && (

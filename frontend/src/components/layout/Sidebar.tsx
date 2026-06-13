@@ -84,7 +84,7 @@ export function Sidebar() {
 
       {/* Wallet widget */}
       <div className="px-3 py-3 border-t border-white/10">
-        <WalletBalanceWidget balance={23500} variant="compact" />
+        <WalletBalanceWidget balance={500000} variant="compact" />
       </div>
 
       {/* User + Logout */}

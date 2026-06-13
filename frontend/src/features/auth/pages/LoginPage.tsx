@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ArrowRight, LayoutDashboard, Mail, ShieldCheck, Zap, Lock, Loader2 } from 'lucide-react';
+import { ArrowRight, Briefcase, Gamepad2, Globe, LayoutDashboard, Lock, Loader2, Mail, MonitorPlay, ShieldCheck, Zap } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAccountStore } from '@/stores/account.store';
 import { defaultAccountId, mockAccounts } from '@/lib/mock/mockAccounts';
@@ -89,7 +89,7 @@ export function LoginPage() {
 
             {/* Logo */}
             <a
-              href="https://speedlinktraining.com/"
+              href="https://speedlinkng.com/high-speed-fibre-internet/"
               target="_blank"
               rel="noreferrer noopener"
               className="relative z-10 flex items-center gap-3 transition-opacity hover:opacity-90"
@@ -120,13 +120,37 @@ export function LoginPage() {
                 Secure Portal
               </div>
               <h1 className="font-heading text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-                One platform.<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-light to-teal-200">
-                  Endless connection.
-                </span>
+                One platform
               </h1>
+
+              {/* Use-case badges */}
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <span className="inline-flex items-center gap-2">
+                  <MonitorPlay className="h-4 w-4" />
+                  Stream
+                </span>
+                <span className="w-1 h-1 rounded-full bg-white/30" />
+
+                <span className="inline-flex items-center gap-2">
+                  <Briefcase className="h-4 w-4" />
+                  Work
+                </span>
+                <span className="w-1 h-1 rounded-full bg-white/30" />
+
+                <span className="inline-flex items-center gap-2">
+                  <Gamepad2 className="h-4 w-4" />
+                  Game
+                </span>
+                <span className="w-1 h-1 rounded-full bg-white/30" />
+
+                <span className="inline-flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  Connect
+                </span>
+              </div>
+
               <p className="max-w-md text-lg leading-relaxed text-white/80">
-                Experience seamless internet management. Enter your email and password to access your personalized portal.
+                Experience the future of connectivity with our reliable, high‑speed Fibre-to-the-Home (FTTH) internet
               </p>
             </div>
 

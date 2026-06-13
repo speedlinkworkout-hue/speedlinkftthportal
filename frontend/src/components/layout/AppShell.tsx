@@ -1,10 +1,10 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
-const LogoSrc = '/speedlink-logo.png';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { BottomNav } from './BottomNav';
+import { ThemeInitializer } from '@/components/ThemeInitializer';
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -18,7 +18,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [currentPath]);
 
   return (
-    <div className="min-h-screen flex bg-[#F5F7FA]">
+    <div className="flex min-h-screen bg-[#F5F7FA] text-[#0D1B2E] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100">
+      <ThemeInitializer />
       {/* ── Desktop Sidebar ── */}
       <div className="hidden lg:flex">
         <Sidebar />

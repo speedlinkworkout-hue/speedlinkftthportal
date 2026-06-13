@@ -2,11 +2,76 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self';" />
     <link rel="icon" type="image/png" href="/speedlink-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Speedlink FTTH — Manage your fiber internet subscription, check usage, top up your wallet, and get support." />
     <title>Speedlink FTTH Portal</title>
+    <script>
+      (function () {
+        var themeStorageKey = 'speedlink-theme-store';
+        var protectedPathPrefixes = [
+          '/dashboard',
+          '/plans',
+          '/wallet',
+          '/billing',
+          '/usage',
+          '/account',
+          '/admin',
+          '/finance',
+          '/support'
+        ];
+
+        function isProtectedPath(pathname) {
+          return protectedPathPrefixes.some(function (prefix) {
+            return pathname === prefix || pathname.indexOf(prefix + '/') === 0;
+          });
+        }
+
+        function readTheme() {
+          try {
+            var storedValue = window.localStorage.getItem(themeStorageKey);
+            if (!storedValue) return 'light';
+
+            var parsedValue = JSON.parse(storedValue);
+            return parsedValue &&
+              parsedValue.state &&
+              parsedValue.state.theme === 'dark'
+              ? 'dark'
+              : 'light';
+          } catch (error) {
+            return 'light';
+          }
+        }
+
+        function syncThemeClass() {
+          if (!isProtectedPath(window.location.pathname)) {
+            document.documentElement.classList.remove('dark');
+            return;
+          }
+
+          document.documentElement.classList.toggle('dark', readTheme() === 'dark');
+        }
+
+        var originalPushState = window.history.pushState;
+        var originalReplaceState = window.history.replaceState;
+
+        window.history.pushState = function () {
+          var result = originalPushState.apply(this, arguments);
+          window.requestAnimationFrame(syncThemeClass);
+          return result;
+        };
+
+        window.history.replaceState = function () {
+          var result = originalReplaceState.apply(this, arguments);
+          window.requestAnimationFrame(syncThemeClass);
+          return result;
+        };
+
+        window.addEventListener('popstate', syncThemeClass);
+        syncThemeClass();
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

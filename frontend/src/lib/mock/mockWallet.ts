@@ -4,7 +4,7 @@ import { Wallet, Transaction, PaymentMethod } from '@/types/billing.types';
 export const mockWallet: Wallet = {
   id: 'wal-001',
   accountId: 'acc-001',
-  balanceNgn: 23500,
+  balanceNgn: 500000,
   currency: 'NGN',
   lastCreditAt: '2026-05-18T14:15:00Z',
 };

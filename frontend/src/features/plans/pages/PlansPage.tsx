@@ -15,6 +15,7 @@ import { mockPlanQueue, mockAvailablePlans, mostPopularPlanId } from '@/lib/mock
 import { mockWallet } from '@/lib/mock/mockWallet';
 import { Plan, PlanStatus } from '@/types/plan.types';
 import { useToast } from '@/hooks/use-toast';
+import PremiumButton from '@/components/PremiumButton';
 
 
 const activePQ = mockPlanQueue.find((pq) => pq.status === PlanStatus.ACTIVE);
@@ -286,24 +287,39 @@ function PlanCard({ plan, isPopular, onBuy }: PlanCardProps) {
         ))}
       </ul>
 
-      <button
-        id={`buy-plan-${plan.id}`}
-        onClick={() => onBuy(plan)}
-        className={[
-          'w-full py-3 rounded-full font-semibold text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none',
-          !sufficient
-            ? 'bg-[#F4A261]/20 text-[#F4A261] border border-[#F4A261]/30 hover:bg-[#F4A261] hover:text-white'
-            : hasWaiting
-              ? 'border border-[#E2E8F0] text-[#0F2B5B] hover:bg-[#0F2B5B] hover:text-white'
-              : 'bg-[#0F2B5B] text-white hover:bg-[#1A3F7A]',
-        ].join(' ')}
-      >
-        {!sufficient
-          ? 'Top Up to Buy'
-          : hasWaiting
-            ? 'Add to Queue'
-            : `Buy Now — ₦${plan.priceNgn.toLocaleString()}`}
-      </button>
+          { !sufficient ? (
+            <Link
+              to="/wallet"
+              className="block w-full py-3 rounded-full bg-[#F4A261] text-white font-semibold text-center hover:bg-[#e8924e] transition-all duration-200"
+            >
+              Top Up to Buy
+            </Link>
+          ) : hasWaiting ? (
+            // Premium plans use the styled PremiumButton
+            (() => {
+              const premiumNames = ['Smart Prenuim', 'Smart Diamond', 'Smart Gold'];
+              const isPremium = premiumNames.includes(plan.name);
+              return isPremium ? (
+                <PremiumButton onClick={() => onBuy(plan)} label="Add to Queue" />
+              ) : (
+                <button
+                  id={`buy-plan-${plan.id}`}
+                  onClick={() => onBuy(plan)}
+                  className="w-full py-3 rounded-full border border-[#E2E8F0] text-[#0F2B5B] hover:bg-[#0F2B5B] hover:text-white focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none transition-all duration-200"
+                >
+                  Add to Queue
+                </button>
+              );
+            })()
+          ) : (
+            <button
+              id={`buy-plan-${plan.id}`}
+              onClick={() => onBuy(plan)}
+              className="w-full py-3 rounded-full bg-[#0F2B5B] text-white font-semibold hover:bg-[#1A3F7A] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none"
+            >
+              {`Buy Now — ₦${plan.priceNgn.toLocaleString()}`}
+            </button>
+          ) }
     </div>
   );
 }

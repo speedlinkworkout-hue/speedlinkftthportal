@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
 
 const config: Config = {
-  darkMode: ['class'],
+  darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
@@ -15,7 +15,7 @@ const config: Config = {
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
-        /* Speedlink brand colors — direct hex usage */
+        /*Speedlink brand colors*/
         speedlink: {
           navy:        '#0F2B5B',
           navyLight:   '#1A3F7A',

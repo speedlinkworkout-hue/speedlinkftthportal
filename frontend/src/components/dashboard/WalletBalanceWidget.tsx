@@ -40,7 +40,7 @@ export function WalletBalanceWidget({ balance, variant }: WalletBalanceWidgetPro
 
   // Full variant (dashboard card)
   return (
-    <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-5 flex flex-col gap-4">
+    <div className="flex flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900">
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider">
           Wallet Balance
@@ -52,12 +52,12 @@ export function WalletBalanceWidget({ balance, variant }: WalletBalanceWidgetPro
 
       <div>
         <div
-          className="font-mono font-bold text-[#0F2B5B] text-3xl leading-tight"
+          className="font-mono text-3xl font-bold leading-tight text-[#0F2B5B] dark:text-gray-100"
           aria-label={`Wallet balance: ${formatNGN(balance)}`}
         >
           {formatNGN(balance)}
         </div>
-        <p className="text-xs text-[#94A3B8] mt-1">
+        <p className="mt-1 text-xs text-[#94A3B8] dark:text-gray-500">
           Last credit: ₦5,000 on May 20, 2026
         </p>
       </div>
@@ -74,7 +74,7 @@ export function WalletBalanceWidget({ balance, variant }: WalletBalanceWidgetPro
         <Link
           to="/wallet"
           id="wallet-history-link"
-          className="flex-1 flex items-center justify-center py-2.5 rounded-full border border-[#E2E8F0] text-[#64748B] text-sm font-medium hover:border-[#0F2B5B]/30 hover:text-[#0F2B5B] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none"
+          className="flex flex-1 items-center justify-center rounded-full border border-[#E2E8F0] py-2.5 text-sm font-medium text-[#64748B] transition-all duration-200 hover:border-[#0F2B5B]/30 hover:text-[#0F2B5B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F2B5B] dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-white"
         >
           View History
         </Link>

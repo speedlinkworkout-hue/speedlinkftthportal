@@ -3,6 +3,7 @@ import { Bell } from 'lucide-react';
 const LogoSrc = '/speedlink-logo.png';
 import { useAuthStore } from '@/stores/auth.store';
 import { MultiAccountSwitcher } from '@/components/common/MultiAccountSwitcher';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const pageTitles: Record<string, string> = {
   '/dashboard':       'Dashboard',
@@ -35,7 +36,7 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
 
   return (
     <header
-      className="h-16 bg-white border-b border-[#E2E8F0] flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30 relative"
+      className="relative sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#E2E8F0] bg-white px-4 transition-colors duration-200 dark:border-gray-800 dark:bg-gray-900 lg:px-6"
       role="banner"
     >
       {/* Left: hamburger (mobile) + page title */}
@@ -44,7 +45,7 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
           id="mobile-menu-btn"
           onClick={onMenuOpen}
           aria-label="Open navigation menu"
-          className="lg:hidden p-2 rounded-xl text-[#64748B] hover:bg-[#F5F7FA] hover:text-[#0F2B5B] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none"
+          className="rounded-xl p-2 text-[#64748B] transition-all duration-200 hover:bg-[#F5F7FA] hover:text-[#0F2B5B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F2B5B] dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white lg:hidden"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <rect y="3"  width="20" height="2" rx="1" />
@@ -52,7 +53,7 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
             <rect y="15" width="20" height="2" rx="1" />
           </svg>
         </button>
-        <h1 className="font-heading font-semibold text-lg text-[#0D1B2E] hidden lg:block">
+        <h1 className="hidden font-heading text-lg font-semibold text-[#0D1B2E] dark:text-gray-100 lg:block">
           {title}
         </h1>
         {/* Mobile: centered logo placeholder (rendered in AppShell mobile topbar) */}
@@ -64,22 +65,24 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
           <MultiAccountSwitcher />
         </div>
 
+        <ThemeToggle />
+
         {/* Notification bell */}
         <button
           id="notification-bell"
           aria-label="Notifications (2 unread)"
-          className="relative p-2 rounded-xl text-[#64748B] hover:bg-[#F5F7FA] hover:text-[#0F2B5B] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none"
+          className="relative rounded-xl p-2 text-[#64748B] transition-all duration-200 hover:bg-[#F5F7FA] hover:text-[#0F2B5B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F2B5B] dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
         >
           <Bell className="w-5 h-5" aria-hidden="true" />
           <span
-            className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#E63946] rounded-full border-2 border-white"
+            className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-white bg-[#E63946] dark:border-gray-900"
             aria-hidden="true"
           />
         </button>
 
         {/* User avatar */}
         <div
-          className="w-8 h-8 rounded-full bg-[#0F2B5B] flex items-center justify-center text-white text-xs font-semibold cursor-pointer shrink-0"
+          className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#0F2B5B] text-xs font-semibold text-white dark:bg-primary"
           title={user ? `${user.firstName} ${user.lastName}` : 'User'}
           aria-hidden="true"
         >
