@@ -41,8 +41,8 @@ export function LoginPage() {
   async function onSubmit(values: LoginValues) {
     if (values.password !== '1234567890') {
       toast({
-        title: 'Invalid Password',
-        description: 'The password you entered is incorrect.',
+        title: 'Login Failed',
+        description: 'Incorrect login details.',
         variant: 'error',
       });
       return;
@@ -54,8 +54,8 @@ export function LoginPage() {
 
     if (!user) {
       toast({
-        title: 'Unknown email',
-        description: 'You do not have an active account associated with this email.',
+        title: 'Login Failed',
+        description: 'Incorrect login details.',
         variant: 'error',
       });
       return;
