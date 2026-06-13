@@ -29,14 +29,12 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
 
-  const email = watch('email');
 
   async function onSubmit(values: LoginValues) {
     if (values.password !== '1234567890') {
