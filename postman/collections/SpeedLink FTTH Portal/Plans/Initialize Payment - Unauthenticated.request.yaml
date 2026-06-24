@@ -1,0 +1,24 @@
+$kind: http-request
+name: 'Initialize Payment - Unauthenticated'
+method: POST
+url: '{{baseUrl}}/plans/purchase/initialize'
+auth:
+  type: noauth
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "planId": "plan_basic"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 401", () => pm.response.to.have.status(401));
+      pm.test("Unauthorized error", () => {
+        const json = pm.response.json();
+        pm.expect(json.message).to.exist;
+      });

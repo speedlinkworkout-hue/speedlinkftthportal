@@ -1,0 +1,33 @@
+$kind: http-request
+name: 'Register - Step 1 (Send OTP)'
+method: POST
+url: '{{baseUrl}}/auth/register'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "fullName": "{{testUserName}}",
+      "email": "{{testUserEmail}}",
+      "phoneNumber": "{{testUserPhone}}",
+      "password": "{{testUserPassword}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("requiresOTP is true", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.requiresOTP).to.be.true;
+      });
+      pm.test("devOTP present in dev mode", () => {
+        const json = pm.response.json();
+        if (json.devOTP) {
+          pm.environment.set("otpCode", json.devOTP);
+          console.log("OTP captured:", json.devOTP);
+        }
+      });

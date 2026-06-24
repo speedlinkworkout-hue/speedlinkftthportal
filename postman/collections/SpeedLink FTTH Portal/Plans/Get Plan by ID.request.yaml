@@ -1,0 +1,17 @@
+$kind: http-request
+name: 'Get Plan by ID'
+method: GET
+url: '{{baseUrl}}/plans/plan_basic'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Returns correct plan", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.plan.id).to.eql("plan_basic");
+        pm.expect(json.plan.name).to.eql("Basic 50Mbps");
+        pm.expect(json.plan.priceNGN).to.eql(15000);
+        pm.expect(json.plan.speed).to.eql("50Mbps");
+      });

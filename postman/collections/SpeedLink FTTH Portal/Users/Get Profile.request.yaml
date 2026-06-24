@@ -1,0 +1,22 @@
+$kind: http-request
+name: 'Get Profile'
+method: GET
+url: '{{baseUrl}}/users/profile'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Returns user and connections", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.user).to.exist;
+        pm.expect(json.connections).to.be.an("array");
+        pm.expect(json.user).to.not.have.property("password");
+      });
+      pm.test("wifiPassword excluded from connections", () => {
+        const json = pm.response.json();
+        json.connections.forEach(conn => {
+          pm.expect(conn).to.not.have.property("wifiPassword");
+        });
+      });

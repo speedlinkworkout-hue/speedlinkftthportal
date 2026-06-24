@@ -1,0 +1,15 @@
+$kind: http-request
+name: Get User Account by Login ID
+method: GET
+url: '{{companyApiBaseUrl}}/user/{{companyLoginId}}'
+description: |-
+  Fetches a user's account information from the company's main database using their unique login ID.
+
+  Set the `companyLoginId` environment variable to the user's unique login ID before sending.
+
+  Requires authentication — set the Authorization header with the appropriate credentials/token from the company API.
+headers:
+  - key: Accept
+    value: application/json
+  - key: Authorization
+    value: 'Bearer {{companyApiToken}}'

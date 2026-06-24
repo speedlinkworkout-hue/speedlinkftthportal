@@ -1,0 +1,8 @@
+$kind: collection
+name: SpeedLink FTTH Portal
+description: |-
+  Full API test suite for the SpeedLink FTTH Portal backend.
+  Covers Auth, Plans/Payments, and User management endpoints.
+  
+  Base URL: {{baseUrl}}
+  Auth: JWT via httpOnly cookie or Authorization: Bearer {{authToken}}

@@ -1,0 +1,15 @@
+$kind: http-request
+name: 'Get Current User - Unauthorized'
+method: GET
+url: '{{baseUrl}}/auth/me'
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 401", () => pm.response.to.have.status(401));
+      pm.test("Unauthorized error returned", () => {
+        const json = pm.response.json();
+        pm.expect(json.message).to.exist;
+      });

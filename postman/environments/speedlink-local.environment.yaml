@@ -1,0 +1,38 @@
+name: SpeedLink FTTH - Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:5000/api'
+    enabled: true
+  - key: authToken
+    value: ''
+    enabled: true
+  - key: testUserEmail
+    value: testuser@speedlink.com
+    enabled: true
+  - key: testUserPassword
+    value: 'Test@1234'
+    enabled: true
+  - key: testUserName
+    value: 'Test User'
+    enabled: true
+  - key: testUserPhone
+    value: '08012345678'
+    enabled: true
+  - key: connectionId
+    value: ''
+    enabled: true
+  - key: paymentReference
+    value: ''
+    enabled: true
+  - key: otpCode
+    value: ''
+    enabled: true
+  - key: companyApiBaseUrl
+    value: 'http://blazzinghost.com:8790/rest'
+    enabled: true
+  - key: companyLoginId
+    value: ''
+    enabled: true
+  - key: companyApiToken
+    value: ''
+    enabled: true

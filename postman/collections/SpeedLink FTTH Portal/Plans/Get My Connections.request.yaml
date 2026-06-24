@@ -1,0 +1,27 @@
+$kind: http-request
+name: 'Get My Connections'
+method: GET
+url: '{{baseUrl}}/plans/my-connections'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Returns connections array", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.connections).to.be.an("array");
+        pm.expect(json).to.have.property("count");
+      });
+      pm.test("wifiPassword is excluded", () => {
+        const json = pm.response.json();
+        json.connections.forEach(conn => {
+          pm.expect(conn).to.not.have.property("wifiPassword");
+        });
+      });
+      pm.test("Save first connectionId if available", () => {
+        const json = pm.response.json();
+        if (json.connections.length > 0) {
+          pm.environment.set("connectionId", json.connections[0]._id);
+        }
+      });

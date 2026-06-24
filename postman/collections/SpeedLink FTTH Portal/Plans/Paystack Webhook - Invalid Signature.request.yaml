@@ -1,0 +1,28 @@
+$kind: http-request
+name: 'Paystack Webhook - Invalid Signature'
+method: POST
+url: '{{baseUrl}}/plans/webhook/paystack'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: x-paystack-signature
+    value: invalidsignature123
+body:
+  type: json
+  content: |-
+    {
+      "event": "charge.success",
+      "data": {
+        "reference": "fake_ref",
+        "status": "success"
+      }
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 401", () => pm.response.to.have.status(401));
+      pm.test("Invalid signature error", () => {
+        const json = pm.response.json();
+        pm.expect(json.message).to.include("signature");
+      });

@@ -1,0 +1,19 @@
+$kind: http-request
+name: 'Get Connection Usage - Monthly'
+method: GET
+url: '{{baseUrl}}/users/connections/{{connectionId}}/usage'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Returns monthly usage", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.period).to.eql("monthly");
+        pm.expect(json.usage).to.have.all.keys("download", "upload", "total");
+      });
+      pm.test("Total equals download + upload", () => {
+        const { download, upload, total } = pm.response.json().usage;
+        pm.expect(total).to.eql(download + upload);
+      });

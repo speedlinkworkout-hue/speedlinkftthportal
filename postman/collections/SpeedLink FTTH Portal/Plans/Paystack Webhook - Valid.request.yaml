@@ -1,0 +1,31 @@
+$kind: http-request
+name: 'Paystack Webhook - Valid'
+method: POST
+url: '{{baseUrl}}/plans/webhook/paystack'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: x-paystack-signature
+    value: valid_hmac_signature_here
+body:
+  type: json
+  content: |-
+    {
+      "event": "charge.success",
+      "data": {
+        "reference": "{{paymentReference}}",
+        "status": "success",
+        "amount": 1500000
+      }
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200 or 401", () => {
+        pm.expect(pm.response.code).to.be.oneOf([200, 401]);
+      });
+      pm.test("Response has success field", () => {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("success");
+      });

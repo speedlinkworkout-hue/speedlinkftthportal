@@ -1,0 +1,25 @@
+$kind: http-request
+name: 'Initialize Payment'
+method: POST
+url: '{{baseUrl}}/plans/purchase/initialize'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "planId": "plan_basic"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Returns authorization_url and reference", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.authorization_url).to.be.a("string").and.include("https://");
+        pm.expect(json.reference).to.be.a("string").and.include("FIB-");
+        pm.environment.set("paymentReference", json.reference);
+      });

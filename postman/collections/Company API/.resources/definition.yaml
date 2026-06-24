@@ -1,0 +1,5 @@
+$kind: collection
+name: Company API
+description: |-
+  Requests for the BlazzingHost company API at blazzinghost.com:8790/rest.
+  Used to fetch live user account data from the main company database using a unique login ID per user.

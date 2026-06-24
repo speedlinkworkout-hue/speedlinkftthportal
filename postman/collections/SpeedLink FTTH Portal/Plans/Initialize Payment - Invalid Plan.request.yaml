@@ -1,0 +1,22 @@
+$kind: http-request
+name: 'Initialize Payment - Invalid Plan'
+method: POST
+url: '{{baseUrl}}/plans/purchase/initialize'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "planId": "plan_fake"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 404", () => pm.response.to.have.status(404));
+      pm.test("Plan not found error", () => {
+        const json = pm.response.json();
+        pm.expect(json.message).to.include("not found");
+      });

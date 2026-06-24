@@ -1,0 +1,25 @@
+$kind: http-request
+name: 'Verify Payment'
+method: POST
+url: '{{baseUrl}}/plans/purchase/verify'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "reference": "{{paymentReference}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Payment verified and plan activated", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.connection).to.have.property("id");
+        pm.expect(json.connection.status).to.eql("active");
+        pm.environment.set("connectionId", json.connection.id);
+      });

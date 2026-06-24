@@ -1,0 +1,26 @@
+$kind: http-request
+name: 'Get All Plans'
+method: GET
+url: '{{baseUrl}}/plans'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Returns 4 plans", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.count).to.eql(4);
+        pm.expect(json.plans).to.be.an("array").with.lengthOf(4);
+      });
+      pm.test("Plans have required fields", () => {
+        const json = pm.response.json();
+        json.plans.forEach(plan => {
+          pm.expect(plan).to.have.all.keys("id", "name", "speed", "price", "priceNGN", "duration", "features");
+        });
+      });
+      pm.test("Plan IDs are correct", () => {
+        const json = pm.response.json();
+        const ids = json.plans.map(p => p.id);
+        pm.expect(ids).to.include.members(["plan_basic", "plan_standard", "plan_pro", "plan_ultra"]);
+      });

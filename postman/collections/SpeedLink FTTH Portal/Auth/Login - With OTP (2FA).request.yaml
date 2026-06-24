@@ -1,0 +1,27 @@
+$kind: http-request
+name: 'Login - With OTP (2FA)'
+method: POST
+url: '{{baseUrl}}/auth/login'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{testUserEmail}}",
+      "otp": "{{otpCode}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Login successful with OTP", () => {
+        const json = pm.response.json();
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.user).to.have.property("id");
+      });
+      pm.test("JWT cookie is set", () => {
+        pm.expect(pm.cookies.has("jwt")).to.be.true;
+      });

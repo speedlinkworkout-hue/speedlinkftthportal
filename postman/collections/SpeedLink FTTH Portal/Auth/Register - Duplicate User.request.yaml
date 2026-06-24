@@ -1,0 +1,26 @@
+$kind: http-request
+name: 'Register - Duplicate User'
+method: POST
+url: '{{baseUrl}}/auth/register'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "fullName": "{{testUserName}}",
+      "email": "{{testUserEmail}}",
+      "phoneNumber": "{{testUserPhone}}",
+      "password": "{{testUserPassword}}",
+      "otp": "123456"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 400", () => pm.response.to.have.status(400));
+      pm.test("Error message mentions duplicate", () => {
+        const json = pm.response.json();
+        pm.expect(json.message).to.include("already exists");
+      });

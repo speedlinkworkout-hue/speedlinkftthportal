@@ -9,6 +9,7 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import planRoutes from './routes/planRoutes.js';
+import companyApiRoutes from './routes/companyApiRoutes.js';
 
 
 dotenv.config()
@@ -36,6 +37,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/plans', planRoutes);
+app.use('/api/company', companyApiRoutes);
 
 
 // Middleware
