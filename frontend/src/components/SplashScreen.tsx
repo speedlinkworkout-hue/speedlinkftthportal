@@ -254,7 +254,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             fontFamily: "'Outfit', sans-serif",
           }}
         >
-          Connecting You to What Matters
+          Enjoy Unlimited Fibre Internet
         </p>
       </div>
 

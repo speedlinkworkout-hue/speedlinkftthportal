@@ -101,7 +101,7 @@ export function LoginPage() {
                 )}
               </div>
               <span className="font-heading text-2xl font-bold tracking-tight">
-                Speedlink Interconnect
+                Speedlink Connect
               </span>
             </a>
 
