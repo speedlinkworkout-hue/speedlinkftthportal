@@ -180,11 +180,10 @@ export function LoginPage() {
                         type="email"
                         {...register('email')}
                         placeholder="e.g. name@company.com"
-                        className={`w-full rounded-2xl border ${
-                          errors.email
+                        className={`w-full rounded-2xl border ${errors.email
                             ? 'border-danger focus:ring-danger/10'
                             : 'border-slate-200 focus:border-primary focus:ring-primary/10'
-                        } bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900`}
+                          } bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900`}
                       />
                     </div>
                     {errors.email && (
@@ -204,11 +203,10 @@ export function LoginPage() {
                         type="password"
                         {...register('password')}
                         placeholder="••••••••"
-                        className={`w-full rounded-2xl border ${
-                          errors.password
+                        className={`w-full rounded-2xl border ${errors.password
                             ? 'border-danger focus:ring-danger/10'
                             : 'border-slate-200 focus:border-primary focus:ring-primary/10'
-                        } bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900`}
+                          } bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:bg-white focus:ring-4 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-primary dark:focus:bg-slate-900`}
                       />
                     </div>
                     {errors.password && (
@@ -244,4 +242,4 @@ export function LoginPage() {
       </div>
     </div>
   );
-}
+}
