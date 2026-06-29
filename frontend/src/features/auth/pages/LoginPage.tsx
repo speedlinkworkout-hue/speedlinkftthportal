@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ArrowRight, Activity, LayoutDashboard, Lock, Loader2, Mail, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, Activity, LayoutDashboard, Lock, Loader2, Mail, ShieldCheck, Zap, MonitorPlay, Gamepad2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAccountStore } from '@/stores/account.store';
 import { defaultAccountId, mockAccounts } from '@/lib/mock/mockAccounts';
@@ -138,13 +138,17 @@ export function LoginPage() {
 
             {/* Footer badges */}
             <div className="relative z-10 mt-auto">
-              <div className="flex items-center gap-4 text-sm text-white/60">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-white/60">
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4" /> Encrypted
+                  <MonitorPlay className="h-4 w-4" /> 4K Streaming
                 </span>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
+                <span className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
                 <span className="flex items-center gap-1.5">
-                  <LayoutDashboard className="h-4 w-4" /> Real-time
+                  <Gamepad2 className="h-4 w-4" /> Gaming
+                </span>
+                <span className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
+                <span className="flex items-center gap-1.5">
+                  <Zap className="h-4 w-4" /> Fast Internet
                 </span>
               </div>
             </div>
