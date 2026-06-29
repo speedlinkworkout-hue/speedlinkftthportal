@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ArrowRight, Briefcase, Gamepad2, Globe, LayoutDashboard, Lock, Loader2, Mail, MonitorPlay, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, Activity, LayoutDashboard, Lock, Loader2, Mail, ShieldCheck, Zap } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAccountStore } from '@/stores/account.store';
 import { defaultAccountId, mockAccounts } from '@/lib/mock/mockAccounts';
@@ -115,29 +115,19 @@ export function LoginPage() {
                 One platform
               </h1>
 
-              {/* Use-case badges */}
+              {/* Trust badges */}
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="inline-flex items-center gap-2">
-                  <MonitorPlay className="h-4 w-4" />
-                  Stream
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                  Encrypted
                 </span>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
-
-                <span className="inline-flex items-center gap-2">
-                  <Briefcase className="h-4 w-4" />
-                  Work
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md">
+                  <Activity className="h-3.5 w-3.5 text-[#2c8fff]" />
+                  Real‑time
                 </span>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
-
-                <span className="inline-flex items-center gap-2">
-                  <Gamepad2 className="h-4 w-4" />
-                  Game
-                </span>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
-
-                <span className="inline-flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  Connect
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md">
+                  <LayoutDashboard className="h-3.5 w-3.5 text-amber-400" />
+                  Live Dashboard
                 </span>
               </div>
 
@@ -254,4 +244,4 @@ export function LoginPage() {
       </div>
     </div>
   );
-}
+}
