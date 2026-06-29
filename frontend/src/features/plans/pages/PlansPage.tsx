@@ -11,16 +11,15 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { PlanStatusBadge } from '@/components/common/PlanStatusBadge';
-import { mockPlanQueue, mockAvailablePlans, mostPopularPlanId } from '@/lib/mock/mockPlans';
-import { mockWallet } from '@/lib/mock/mockWallet';
+import { mockPlanQueues, mockAvailablePlans, mostPopularPlanId } from '@/lib/mock/mockPlans';
+import { mockWallets } from '@/lib/mock/mockWallet';
+import { useAccountStore } from '@/stores/account.store';
+import { mockAccounts } from '@/lib/mock/mockAccounts';
 import { Plan, PlanStatus } from '@/types/plan.types';
 import { useToast } from '@/hooks/use-toast';
 import PremiumButton from '@/components/PremiumButton';
 
 
-const activePQ = mockPlanQueue.find((pq) => pq.status === PlanStatus.ACTIVE);
-const waitingPQ = mockPlanQueue.find((pq) => pq.status === PlanStatus.WAITING);
-const usedPQs = mockPlanQueue.filter((pq) => pq.status === PlanStatus.USED);
 const cardDelayClasses = ['animate-delay-100', 'animate-delay-150', 'animate-delay-200', 'animate-delay-300'];
 
 function getPlanById(id: string) {
@@ -49,15 +48,15 @@ type ModalStep = 'confirm' | 'payment' | 'success';
 interface BuyPlanModalProps {
   plan: Plan;
   onClose: () => void;
+  walletBalance: number;
+  hasActive: boolean;
 }
 
-function BuyPlanModal({ plan, onClose }: BuyPlanModalProps) {
+function BuyPlanModal({ plan, onClose, walletBalance, hasActive }: BuyPlanModalProps) {
   const [step, setStep] = useState<ModalStep>('confirm');
   const { toast } = useToast();
-  const balance = mockWallet.balanceNgn;
-  const sufficient = balance >= plan.priceNgn;
-  const shortfall = plan.priceNgn - balance;
-  const hasActive = !!activePQ;
+  const sufficient = walletBalance >= plan.priceNgn;
+  const shortfall = plan.priceNgn - walletBalance;
 
   function handleConfirmPurchase() {
     // Simulate API call
@@ -136,7 +135,7 @@ function BuyPlanModal({ plan, onClose }: BuyPlanModalProps) {
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-[#64748B]">Wallet balance</span>
                   <span className={`font-mono font-semibold ${sufficient ? 'text-[#00A86B]' : 'text-[#E63946]'}`}>
-                    ₦{balance.toLocaleString()}
+                    ₦{walletBalance.toLocaleString()}
                   </span>
                 </div>
                 {!sufficient && (
@@ -174,7 +173,7 @@ function BuyPlanModal({ plan, onClose }: BuyPlanModalProps) {
                 <div className="p-4 rounded-xl border-2 border-[#00A86B] bg-[#E6F7F1] flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold text-[#0D1B2E]">Pay from Wallet</p>
-                    <p className="text-xs text-[#64748B] font-mono">₦{balance.toLocaleString()} available</p>
+                    <p className="text-xs text-[#64748B] font-mono">₦{walletBalance.toLocaleString()} available</p>
                   </div>
                   <Check className="w-5 h-5 text-[#00A86B]" aria-hidden="true" />
                 </div>
@@ -241,12 +240,12 @@ interface PlanCardProps {
   plan: Plan;
   isPopular?: boolean;
   onBuy: (plan: Plan) => void;
+  walletBalance: number;
+  hasWaiting: boolean;
 }
 
-function PlanCard({ plan, isPopular, onBuy }: PlanCardProps) {
-  const balance = mockWallet.balanceNgn;
-  const sufficient = balance >= plan.priceNgn;
-  const hasWaiting = !!waitingPQ;
+function PlanCard({ plan, isPopular, onBuy, walletBalance, hasWaiting }: PlanCardProps) {
+  const sufficient = walletBalance >= plan.priceNgn;
 
   const features = [
     plan.dataLimitGb === null ? 'Unlimited Data' : `${plan.dataLimitGb} GB Data`,
@@ -330,9 +329,20 @@ function PlanCard({ plan, isPopular, onBuy }: PlanCardProps) {
 type PlanFilter = 'All Plans' | 'Home' | 'Business';
 
 export function PlansPage() {
+  const { activeAccountId } = useAccountStore();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [filter, setFilter] = useState<PlanFilter>('All Plans');
+
+  const accountId = activeAccountId || 'acc-001';
+  const planQueue = mockPlanQueues[accountId] || [];
+  const activePQ = planQueue.find((pq) => pq.status === PlanStatus.ACTIVE);
+  const waitingPQ = planQueue.find((pq) => pq.status === PlanStatus.WAITING);
+  const usedPQs = planQueue.filter((pq) => pq.status === PlanStatus.USED);
+  const wallet = mockWallets[accountId] || { balanceNgn: 0 };
+  const walletBalance = wallet.balanceNgn;
+  const activeAccount = mockAccounts.find(a => a.id === accountId);
+  const locationName = activeAccount?.location || 'Port Harcourt GRA';
 
   const activePlan = activePQ ? getPlanById(activePQ.planId) : null;
   const waitingPlan = waitingPQ ? getPlanById(waitingPQ.planId) : null;
@@ -484,7 +494,7 @@ export function PlansPage() {
 
           <div className="flex items-center gap-2 text-xs text-[#64748B]">
             <MapPin className="w-3.5 h-3.5 text-[#00A86B]" aria-hidden="true" />
-            <span>Showing prices for: Port Harcourt GRA</span>
+            <span>Showing prices for: {locationName}</span>
             <button className="text-[#0F2B5B] font-medium underline underline-offset-2 hover:text-[#1A3F7A] transition-colors">
               Edit
             </button>
@@ -521,6 +531,8 @@ export function PlansPage() {
                 plan={plan}
                 isPopular={plan.id === mostPopularPlanId}
                 onBuy={setSelectedPlan}
+                walletBalance={walletBalance}
+                hasWaiting={!!waitingPQ}
               />
             </div>
           ))}
@@ -529,7 +541,12 @@ export function PlansPage() {
 
       {/* Buy Plan Modal */}
       {selectedPlan && (
-        <BuyPlanModal plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
+        <BuyPlanModal 
+          plan={selectedPlan} 
+          onClose={() => setSelectedPlan(null)}
+          walletBalance={walletBalance}
+          hasActive={!!activePQ}
+        />
       )}
 
       {/* Toaster */}

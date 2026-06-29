@@ -11,8 +11,9 @@ import {
   X,
 } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
-import { mockWallet, mockTransactions, mockTransactionLabels } from '@/lib/mock/mockWallet';
+import { mockWallets, mockTransactionsRecord, mockTransactionLabelsRecord } from '@/lib/mock/mockWallet';
 import { Transaction } from '@/types/billing.types';
+import { useAccountStore } from '@/stores/account.store';
 
 
 
@@ -295,10 +296,10 @@ function TopUpModal({ onClose }: TopUpModalProps) {
 // ──────────────────────────────────────────────────────────────────────────
 // Transaction Row
 // ──────────────────────────────────────────────────────────────────────────
-function TransactionRow({ tx }: { tx: Transaction }) {
+function TransactionRow({ tx, labels }: { tx: Transaction, labels: Record<string, string> }) {
   const [expanded, setExpanded] = useState(false);
   const isCredit = tx.type === 'CREDIT';
-  const label = mockTransactionLabels[tx.id] ?? 'Transaction';
+  const label = labels[tx.id] ?? 'Transaction';
 
   return (
     <>
@@ -366,10 +367,16 @@ function TransactionRow({ tx }: { tx: Transaction }) {
 // Wallet Page
 // ──────────────────────────────────────────────────────────────────────────
 export function WalletPage() {
+  const { activeAccountId } = useAccountStore();
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [txFilter, setTxFilter] = useState<TxFilter>('All');
 
-  const filteredTxns = mockTransactions.filter((tx) => {
+  const accountId = activeAccountId || 'acc-001';
+  const wallet = mockWallets[accountId] || { balanceNgn: 0 };
+  const transactions = mockTransactionsRecord[accountId] || [];
+  const transactionLabels = mockTransactionLabelsRecord[accountId] || {};
+
+  const filteredTxns = transactions.filter((tx) => {
     if (txFilter === 'Credits') return tx.type === 'CREDIT';
     if (txFilter === 'Debits') return tx.type === 'DEBIT';
     return true;
@@ -400,9 +407,9 @@ export function WalletPage() {
         </p>
         <div
           className="font-mono font-bold text-[#0F2B5B] text-4xl lg:text-5xl mb-1"
-          aria-label={`Available balance: ${formatNGN(mockWallet.balanceNgn)}`}
+          aria-label={`Available balance: ${formatNGN(wallet.balanceNgn)}`}
         >
-          {formatNGN(mockWallet.balanceNgn)}
+          {formatNGN(wallet.balanceNgn)}
         </div>
         <p className="text-sm text-[#94A3B8] mb-6">
           Last credit: ₦10,000 on May 18, 2026
@@ -458,7 +465,7 @@ export function WalletPage() {
               No transactions found.
             </div>
           ) : (
-            filteredTxns.map((tx) => <TransactionRow key={tx.id} tx={tx} />)
+            filteredTxns.map((tx) => <TransactionRow key={tx.id} tx={tx} labels={transactionLabels} />)
           )}
         </div>
       </div>

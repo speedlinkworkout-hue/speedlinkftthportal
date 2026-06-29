@@ -19,23 +19,15 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
+import { useAccountStore } from '@/stores/account.store';
 import { PlanStatusBadge } from '@/components/common/PlanStatusBadge';
 import { AlertBanner } from '@/components/common/AlertBanner';
 import { WalletBalanceWidget } from '@/components/dashboard/WalletBalanceWidget';
-import { mockPlanQueue, mockAvailablePlans } from '@/lib/mock/mockPlans';
-import { mockMonthlyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
-import { mockWallet } from '@/lib/mock/mockWallet';
+import { mockPlanQueues, mockAvailablePlans } from '@/lib/mock/mockPlans';
+import { mockMonthlyUsages, mockTodayUsages } from '@/lib/mock/mockUsage';
+import { mockWallets } from '@/lib/mock/mockWallet';
 import { PlanStatus } from '@/types/plan.types';
 
-
-const activePlanQueue = mockPlanQueue.find((pq) => pq.status === PlanStatus.ACTIVE);
-const waitingPlanQueue = mockPlanQueue.find((pq) => pq.status === PlanStatus.WAITING);
-const activePlan = activePlanQueue
-  ? mockAvailablePlans.find((p) => p.id === activePlanQueue.planId)
-  : null;
-const waitingPlan = waitingPlanQueue
-  ? mockAvailablePlans.find((p) => p.id === waitingPlanQueue.planId)
-  : null;
 
 function getDaysRemaining(endDate?: string): number {
   if (!endDate) return 0;
@@ -122,11 +114,28 @@ const recentActivity: ActivityItem[] = [
   },
 ];
 
-const recentMonthlyUsage = mockMonthlyUsage.slice(-6);
 
 export function DashboardPage() {
   const { user } = useAuthStore();
+  const { activeAccountId } = useAccountStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const accountId = activeAccountId || 'acc-001';
+  const planQueue = mockPlanQueues[accountId] || [];
+  const activePlanQueue = planQueue.find((pq) => pq.status === PlanStatus.ACTIVE);
+  const waitingPlanQueue = planQueue.find((pq) => pq.status === PlanStatus.WAITING);
+  const activePlan = activePlanQueue
+    ? mockAvailablePlans.find((p) => p.id === activePlanQueue.planId)
+    : null;
+  const waitingPlan = waitingPlanQueue
+    ? mockAvailablePlans.find((p) => p.id === waitingPlanQueue.planId)
+    : null;
+
+  const todayUsage = mockTodayUsages[accountId] || { downloadGb: 0, uploadGb: 0, lastUpdated: 'N/A', daysOnline: 0 };
+  const monthlyUsage = mockMonthlyUsages[accountId] || [];
+  const recentMonthlyUsage = monthlyUsage.slice(-6);
+  const wallet = mockWallets[accountId] || { balanceNgn: 0 };
+
   const daysRemaining = getDaysRemaining(activePlanQueue?.endDate);
   const planDuration = activePlan?.durationDays ?? 30;
   const ringPct = planDuration > 0 ? daysRemaining / planDuration : 0;
@@ -267,9 +276,9 @@ export function DashboardPage() {
               </div>
               <span
                 className="font-mono font-bold text-2xl text-[#0D1B2E]"
-                aria-label={`Download: ${mockTodayUsage.downloadGb} GB`}
+                aria-label={`Download: ${todayUsage.downloadGb} GB`}
               >
-                {mockTodayUsage.downloadGb}
+                {todayUsage.downloadGb}
               </span>
               <span className="text-xs text-[#94A3B8] ml-1">GB</span>
             </div>
@@ -280,9 +289,9 @@ export function DashboardPage() {
               </div>
               <span
                 className="font-mono font-bold text-2xl text-[#0D1B2E]"
-                aria-label={`Upload: ${mockTodayUsage.uploadGb} GB`}
+                aria-label={`Upload: ${todayUsage.uploadGb} GB`}
               >
-                {mockTodayUsage.uploadGb}
+                {todayUsage.uploadGb}
               </span>
               <span className="text-xs text-[#94A3B8] ml-1">GB</span>
             </div>
@@ -294,13 +303,13 @@ export function DashboardPage() {
               className="w-1.5 h-1.5 rounded-full bg-[#00A86B] animate-pulse-live shrink-0"
               aria-hidden="true"
             />
-            Last updated {mockTodayUsage.lastUpdated}
+            Last updated {todayUsage.lastUpdated}
           </div>
         </div>
 
         {/* Card 3: Wallet Balance */}
         <div className="animate-fade-up animate-delay-200">
-          <WalletBalanceWidget balance={mockWallet.balanceNgn} variant="full" />
+          <WalletBalanceWidget balance={wallet.balanceNgn} variant="full" />
         </div>
 
         {/* Card 4: Queued Plan */}

@@ -12,40 +12,80 @@ export interface HourlyUsage {
 }
 
 
-export const mockMonthlyUsage: MonthlyUsage[] = [
-  { month: 'Jan', monthKey: '2026-01', downloadGb: 112.4, uploadGb: 19.8 },
-  { month: 'Feb', monthKey: '2026-02', downloadGb: 128.6, uploadGb: 22.1 },
-  { month: 'Mar', monthKey: '2026-03', downloadGb: 121.3, uploadGb: 20.7 },
-  { month: 'Apr', monthKey: '2026-04', downloadGb: 139.5, uploadGb: 24.2 },
-  { month: 'May', monthKey: '2026-05', downloadGb: 146.2, uploadGb: 25.6 },
-  { month: 'Jun', monthKey: '2026-06', downloadGb: 151.8, uploadGb: 27.0 },
-  { month: 'Jul', monthKey: '2026-07', downloadGb: 158.1, uploadGb: 28.5 },
-  { month: 'Aug', monthKey: '2026-08', downloadGb: 149.7, uploadGb: 26.4 },
-  { month: 'Sep', monthKey: '2026-09', downloadGb: 141.0, uploadGb: 24.9 },
-  { month: 'Oct', monthKey: '2026-10', downloadGb: 154.6, uploadGb: 27.8 },
-  { month: 'Nov', monthKey: '2026-11', downloadGb: 160.2, uploadGb: 29.1 },
-  { month: 'Dec', monthKey: '2026-12', downloadGb: 167.4, uploadGb: 30.3 },
-];
+export const mockMonthlyUsages: Record<string, MonthlyUsage[]> = {
+  'acc-001': [
+    { month: 'Jan', monthKey: '2026-01', downloadGb: 112.4, uploadGb: 19.8 },
+    { month: 'Feb', monthKey: '2026-02', downloadGb: 128.6, uploadGb: 22.1 },
+    { month: 'Mar', monthKey: '2026-03', downloadGb: 121.3, uploadGb: 20.7 },
+    { month: 'Apr', monthKey: '2026-04', downloadGb: 139.5, uploadGb: 24.2 },
+    { month: 'May', monthKey: '2026-05', downloadGb: 146.2, uploadGb: 25.6 },
+    { month: 'Jun', monthKey: '2026-06', downloadGb: 151.8, uploadGb: 27.0 },
+    { month: 'Jul', monthKey: '2026-07', downloadGb: 158.1, uploadGb: 28.5 },
+    { month: 'Aug', monthKey: '2026-08', downloadGb: 149.7, uploadGb: 26.4 },
+    { month: 'Sep', monthKey: '2026-09', downloadGb: 141.0, uploadGb: 24.9 },
+    { month: 'Oct', monthKey: '2026-10', downloadGb: 154.6, uploadGb: 27.8 },
+    { month: 'Nov', monthKey: '2026-11', downloadGb: 160.2, uploadGb: 29.1 },
+    { month: 'Dec', monthKey: '2026-12', downloadGb: 167.4, uploadGb: 30.3 },
+  ],
+  'acc-002': [
+    { month: 'Jan', monthKey: '2026-01', downloadGb: 412.4, uploadGb: 89.8 },
+    { month: 'Feb', monthKey: '2026-02', downloadGb: 428.6, uploadGb: 92.1 },
+    { month: 'Mar', monthKey: '2026-03', downloadGb: 391.3, uploadGb: 85.7 },
+    { month: 'Apr', monthKey: '2026-04', downloadGb: 439.5, uploadGb: 94.2 },
+    { month: 'May', monthKey: '2026-05', downloadGb: 446.2, uploadGb: 95.6 },
+    { month: 'Jun', monthKey: '2026-06', downloadGb: 451.8, uploadGb: 97.0 },
+    { month: 'Jul', monthKey: '2026-07', downloadGb: 488.1, uploadGb: 108.5 },
+    { month: 'Aug', monthKey: '2026-08', downloadGb: 469.7, uploadGb: 96.4 },
+    { month: 'Sep', monthKey: '2026-09', downloadGb: 441.0, uploadGb: 94.9 },
+    { month: 'Oct', monthKey: '2026-10', downloadGb: 454.6, uploadGb: 97.8 },
+    { month: 'Nov', monthKey: '2026-11', downloadGb: 480.2, uploadGb: 109.1 },
+    { month: 'Dec', monthKey: '2026-12', downloadGb: 507.4, uploadGb: 120.3 },
+  ],
+};
 
 
-export const mockHourlyUsage: HourlyUsage[] = [
-  { hour: '00:00', downloadGb: 0.1, uploadGb: 0.02 },
-  { hour: '02:00', downloadGb: 0.05, uploadGb: 0.01 },
-  { hour: '04:00', downloadGb: 0.02, uploadGb: 0.005 },
-  { hour: '06:00', downloadGb: 0.3,  uploadGb: 0.08 },
-  { hour: '08:00', downloadGb: 1.2,  uploadGb: 0.35 },
-  { hour: '10:00', downloadGb: 2.1,  uploadGb: 0.55 },
-  { hour: '12:00', downloadGb: 1.8,  uploadGb: 0.42 },
-  { hour: '14:00', downloadGb: 2.4,  uploadGb: 0.61 },
-  { hour: '16:00', downloadGb: 1.9,  uploadGb: 0.48 },
-  { hour: '18:00', downloadGb: 3.2,  uploadGb: 0.78 },
-  { hour: '20:00', downloadGb: 4.5,  uploadGb: 1.1 },
-  { hour: '22:00', downloadGb: 2.8,  uploadGb: 0.65 },
-];
+export const mockHourlyUsages: Record<string, HourlyUsage[]> = {
+  'acc-001': [
+    { hour: '00:00', downloadGb: 0.1, uploadGb: 0.02 },
+    { hour: '02:00', downloadGb: 0.05, uploadGb: 0.01 },
+    { hour: '04:00', downloadGb: 0.02, uploadGb: 0.005 },
+    { hour: '06:00', downloadGb: 0.3,  uploadGb: 0.08 },
+    { hour: '08:00', downloadGb: 1.2,  uploadGb: 0.35 },
+    { hour: '10:00', downloadGb: 2.1,  uploadGb: 0.55 },
+    { hour: '12:00', downloadGb: 1.8,  uploadGb: 0.42 },
+    { hour: '14:00', downloadGb: 2.4,  uploadGb: 0.61 },
+    { hour: '16:00', downloadGb: 1.9,  uploadGb: 0.48 },
+    { hour: '18:00', downloadGb: 3.2,  uploadGb: 0.78 },
+    { hour: '20:00', downloadGb: 4.5,  uploadGb: 1.1 },
+    { hour: '22:00', downloadGb: 2.8,  uploadGb: 0.65 },
+  ],
+  'acc-002': [
+    { hour: '00:00', downloadGb: 1.1, uploadGb: 0.2 },
+    { hour: '02:00', downloadGb: 0.5, uploadGb: 0.1 },
+    { hour: '04:00', downloadGb: 0.2, uploadGb: 0.05 },
+    { hour: '06:00', downloadGb: 3.0, uploadGb: 0.8 },
+    { hour: '08:00', downloadGb: 12.0, uploadGb: 3.5 },
+    { hour: '10:00', downloadGb: 21.0, uploadGb: 5.5 },
+    { hour: '12:00', downloadGb: 18.0, uploadGb: 4.2 },
+    { hour: '14:00', downloadGb: 24.0, uploadGb: 6.1 },
+    { hour: '16:00', downloadGb: 19.0, uploadGb: 4.8 },
+    { hour: '18:00', downloadGb: 13.2, uploadGb: 2.78 },
+    { hour: '20:00', downloadGb: 4.5, uploadGb: 1.1 },
+    { hour: '22:00', downloadGb: 2.8, uploadGb: 0.65 },
+  ],
+};
 
-export const mockTodayUsage = {
-  downloadGb: 2.34,
-  uploadGb: 0.61,
-  lastUpdated: '14:32:06',
-  daysOnline: 4,
+export const mockTodayUsages: Record<string, { downloadGb: number, uploadGb: number, lastUpdated: string, daysOnline: number }> = {
+  'acc-001': {
+    downloadGb: 2.34,
+    uploadGb: 0.61,
+    lastUpdated: '14:32:06',
+    daysOnline: 4,
+  },
+  'acc-002': {
+    downloadGb: 15.34,
+    uploadGb: 4.61,
+    lastUpdated: '14:32:06',
+    daysOnline: 14,
+  }
 };

@@ -11,7 +11,8 @@ import {
 import { ArrowDown, ArrowUp, RefreshCw, Clock } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SkeletonCard } from '@/components/common/SkeletonCard';
-import { mockMonthlyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
+import { useAccountStore } from '@/stores/account.store';
+import { mockMonthlyUsages, mockTodayUsages } from '@/lib/mock/mockUsage';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -43,22 +44,27 @@ interface UsageRow {
   planActive: string;
 }
 
-const usageTableData: UsageRow[] = mockMonthlyUsage.map((d) => ({
-  date: new Date(`${d.monthKey}-01`).toLocaleDateString('en-GB', {
-    month: 'short',
-    year: 'numeric',
-  }),
-  download: d.downloadGb,
-  upload: d.uploadGb,
-  total: d.downloadGb + d.uploadGb,
-  planActive: '10 Mbps Unlimited',
-})).reverse();
-
 export function UsagePage() {
+  const { activeAccountId } = useAccountStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading] = useState(false);
 
-  const chartData = mockMonthlyUsage.map((d) => ({
+  const accountId = activeAccountId || 'acc-001';
+  const monthlyUsage = mockMonthlyUsages[accountId] || [];
+  const todayUsage = mockTodayUsages[accountId] || { downloadGb: 0, uploadGb: 0, lastUpdated: 'N/A', daysOnline: 0 };
+
+  const usageTableData: UsageRow[] = monthlyUsage.map((d) => ({
+    date: new Date(`${d.monthKey}-01`).toLocaleDateString('en-GB', {
+      month: 'short',
+      year: 'numeric',
+    }),
+    download: d.downloadGb,
+    upload: d.uploadGb,
+    total: d.downloadGb + d.uploadGb,
+    planActive: '10 Mbps Unlimited', // Or you could look this up dynamically
+  })).reverse();
+
+  const chartData = monthlyUsage.map((d) => ({
     label: d.month,
     download: d.downloadGb,
     upload: d.uploadGb,
@@ -90,9 +96,9 @@ export function UsagePage() {
           </div>
           <div
             className="font-mono font-bold text-[#0D1B2E] text-3xl"
-            aria-label={`${mockTodayUsage.downloadGb} GB downloaded today`}
+            aria-label={`${todayUsage.downloadGb} GB downloaded today`}
           >
-            {mockTodayUsage.downloadGb}
+            {todayUsage.downloadGb}
             <span className="text-base text-[#94A3B8] font-normal ml-1">GB</span>
           </div>
         </div>
@@ -109,9 +115,9 @@ export function UsagePage() {
           </div>
           <div
             className="font-mono font-bold text-[#0D1B2E] text-3xl"
-            aria-label={`${mockTodayUsage.uploadGb} GB uploaded today`}
+            aria-label={`${todayUsage.uploadGb} GB uploaded today`}
           >
-            {mockTodayUsage.uploadGb}
+            {todayUsage.uploadGb}
             <span className="text-base text-[#94A3B8] font-normal ml-1">GB</span>
           </div>
         </div>
@@ -128,9 +134,9 @@ export function UsagePage() {
           </div>
           <div
             className="font-mono font-bold text-[#0D1B2E] text-3xl"
-            aria-label={`${mockTodayUsage.daysOnline} days active on current plan`}
+            aria-label={`${todayUsage.daysOnline} days active on current plan`}
           >
-            {mockTodayUsage.daysOnline}
+            {todayUsage.daysOnline}
             <span className="text-base text-[#94A3B8] font-normal ml-1">days active</span>
           </div>
         </div>
@@ -140,7 +146,7 @@ export function UsagePage() {
       <div className="flex items-center justify-between -mt-2">
         <div className="flex items-center gap-1.5 text-xs text-[#94A3B8]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#00A86B] animate-pulse-live shrink-0" aria-hidden="true" />
-          Live data · Last refreshed: {mockTodayUsage.lastUpdated}
+          Live data · Last refreshed: {todayUsage.lastUpdated}
         </div>
         <button
           onClick={handleRefresh}

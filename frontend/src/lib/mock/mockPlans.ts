@@ -60,53 +60,66 @@ export const mockAvailablePlans: Plan[] = [
   }
 ];
 
-/** The subscriber's plan queue (active + waiting + used history) */
-export const mockPlanQueue: PlanQueue[] = [
-  {
-    id: 'pq-active',
-    accountId: 'acc-001',
-    planId: 'plan-002',
-    status: PlanStatus.ACTIVE,
-    startDate: '2026-05-23T00:00:00Z',
-    endDate: '2026-06-22T23:59:59Z',
-    activatedAt: '2026-05-23T00:00:00Z',
-  },
-  {
-    id: 'pq-waiting',
-    accountId: 'acc-001',
-    planId: 'plan-001',
-    status: PlanStatus.WAITING,
-    startDate: '2026-06-22T00:00:00Z',
-    endDate: '2026-07-22T23:59:59Z',
-    queuedAt: '2026-05-24T09:10:00Z',
-  },
-  {
-    id: 'pq-used-1',
-    accountId: 'acc-001',
-    planId: 'plan-002',
-    status: PlanStatus.USED,
-    startDate: '2026-04-23T00:00:00Z',
-    endDate: '2026-05-22T23:59:59Z',
-    activatedAt: '2026-04-23T00:00:00Z',
-  },
-  {
-    id: 'pq-used-2',
-    accountId: 'acc-001',
-    planId: 'plan-001',
-    status: PlanStatus.USED,
-    startDate: '2026-03-24T00:00:00Z',
-    endDate: '2026-04-22T23:59:59Z',
-    activatedAt: '2026-03-24T00:00:00Z',
-  },
-  {
-    id: 'pq-used-3',
-    accountId: 'acc-001',
-    planId: 'plan-003',
-    status: PlanStatus.USED,
-    startDate: '2026-02-22T00:00:00Z',
-    endDate: '2026-03-23T23:59:59Z',
-    activatedAt: '2026-02-22T00:00:00Z',
-  },
-];
+/** The subscriber's plan queue (active + waiting + used history) mapped by accountId */
+export const mockPlanQueues: Record<string, PlanQueue[]> = {
+  'acc-001': [
+    {
+      id: 'pq-active-1',
+      accountId: 'acc-001',
+      planId: 'plan-003', // Smart Prenuim
+      status: PlanStatus.ACTIVE,
+      startDate: '2026-06-20T00:00:00Z',
+      endDate: '2026-07-20T23:59:59Z',
+      activatedAt: '2026-06-20T00:00:00Z',
+    },
+    {
+      id: 'pq-waiting-1',
+      accountId: 'acc-001',
+      planId: 'plan-001',
+      status: PlanStatus.WAITING,
+      startDate: '2026-07-21T00:00:00Z',
+      endDate: '2026-08-20T23:59:59Z',
+      queuedAt: '2026-06-22T09:10:00Z',
+    },
+    {
+      id: 'pq-used-1',
+      accountId: 'acc-001',
+      planId: 'plan-002',
+      status: PlanStatus.USED,
+      startDate: '2026-05-21T00:00:00Z',
+      endDate: '2026-06-19T23:59:59Z',
+      activatedAt: '2026-05-21T00:00:00Z',
+    },
+    {
+      id: 'pq-used-2',
+      accountId: 'acc-001',
+      planId: 'plan-001',
+      status: PlanStatus.USED,
+      startDate: '2026-04-21T00:00:00Z',
+      endDate: '2026-05-20T23:59:59Z',
+      activatedAt: '2026-04-21T00:00:00Z',
+    },
+  ],
+  'acc-002': [
+    {
+      id: 'pq-waiting-2',
+      accountId: 'acc-002',
+      planId: 'plan-002',
+      status: PlanStatus.WAITING,
+      startDate: '2026-06-25T00:00:00Z',
+      endDate: '2026-07-25T23:59:59Z',
+      queuedAt: '2026-06-20T10:15:00Z',
+    },
+    {
+      id: 'pq-used-3',
+      accountId: 'acc-002',
+      planId: 'plan-004',
+      status: PlanStatus.USED,
+      startDate: '2026-05-22T00:00:00Z',
+      endDate: '2026-06-21T23:59:59Z',
+      activatedAt: '2026-05-22T00:00:00Z',
+    },
+  ]
+};
 
 export const mostPopularPlanId = 'plan-002';

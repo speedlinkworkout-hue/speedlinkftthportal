@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AlertTriangle, Info, CheckCircle2, XCircle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { mockPlanQueue } from '@/lib/mock/mockPlans';
+import { mockPlanQueues } from '@/lib/mock/mockPlans';
+import { useAccountStore } from '@/stores/account.store';
 import { PlanStatus } from '@/types/plan.types';
 
 type AlertType = 'expiry' | 'info' | 'success' | 'error';
@@ -52,11 +53,14 @@ export function AlertBanner({
   dismissible = false,
 }: AlertBannerProps) {
   const [dismissed, setDismissed] = useState(false);
+  const { activeAccountId } = useAccountStore();
+  const accountId = activeAccountId || 'acc-001';
 
   // Smart suppression: if type is 'expiry' and a WAITING plan exists, render nothing
   
   if (type === 'expiry') {
-    const hasWaitingPlan = mockPlanQueue.some((pq) => pq.status === PlanStatus.WAITING);
+    const planQueue = mockPlanQueues[accountId] || [];
+    const hasWaitingPlan = planQueue.some((pq) => pq.status === PlanStatus.WAITING);
     if (hasWaitingPlan) return null;
   }
 

@@ -10,7 +10,7 @@ interface AccountState {
 
 export const useAccountStore = create<AccountState>((set) => ({
   accounts: [],
-  activeAccountId: null,
+  activeAccountId: 'acc-001',
   setActiveAccount: (id) => set({ activeAccountId: id }),
   setAccounts: (accounts) => set({ accounts }),
 }));
