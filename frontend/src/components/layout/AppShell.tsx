@@ -18,7 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [currentPath]);
 
   return (
-    <div className="flex min-h-screen bg-[#F5F7FA] text-[#0D1B2E] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100">
+    <div className="flex min-h-screen bg-[#FAF5EF] text-[#0D1B2E] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100">
       <ThemeInitializer />
       {/* ── Desktop Sidebar ── */}
       <div className="hidden lg:flex">

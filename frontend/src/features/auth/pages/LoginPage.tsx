@@ -63,12 +63,6 @@ export function LoginPage() {
     setAccounts(mockAccounts);
     setActiveAccount(defaultAccountId);
 
-    toast({
-      title: 'Access granted',
-      description: `Welcome back, ${user.firstName}.`,
-      variant: 'success',
-    });
-
     navigate(getRoleLandingPath(user.role), { replace: true });
   }
 
