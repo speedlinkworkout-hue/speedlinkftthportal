@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // ---------------------------------------------------------------------------
 // Loader (converted to use standard CSS to remove styled-components dependency)
