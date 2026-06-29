@@ -135,17 +135,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   onCompleteRef.current = onComplete;
 
   useEffect(() => {
-    // Respect prefers-reduced-motion — skip splash entirely
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    if (prefersReducedMotion) {
-      onCompleteRef.current();
-      return;
-    }
-
-    // At 2700ms: start 300ms CSS fade-out
+    // Start fade out at 2700ms
     const fadeTimer = setTimeout(() => {
       setFading(true);
     }, 2700);
