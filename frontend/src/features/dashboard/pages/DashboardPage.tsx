@@ -156,13 +156,15 @@ export function DashboardPage() {
                 year: 'numeric',
               })}
               {' · '}
-              {daysRemaining > 7
-                ? 'Your account is in good standing'
-                : `Plan expires in ${daysRemaining} days`}
+              {daysRemaining === 0
+                ? <span className="text-red-400 font-medium">Plan has expired</span>
+                : daysRemaining > 7
+                  ? 'Your account is in good standing'
+                  : `Plan expires in ${daysRemaining} days`}
             </p>
           </div>
           <Link
-            to="/plans"
+            to={daysRemaining === 0 ? "/wallet" : "/plans"}
             id="welcome-buy-plan-btn"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#00A86B] text-white text-sm font-semibold hover:bg-[#009960] transition-all duration-200 shrink-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
           >
@@ -198,7 +200,7 @@ export function DashboardPage() {
                 <circle cx="36" cy="36" r="28" fill="none" stroke="#E2E8F0" strokeWidth="6" />
                 <circle
                   cx="36" cy="36" r="28" fill="none"
-                  stroke={daysRemaining > 7 ? '#00A86B' : '#F4A261'}
+                  stroke={daysRemaining === 0 ? '#E63946' : daysRemaining > 7 ? '#00A86B' : '#F4A261'}
                   strokeWidth="6"
                   strokeLinecap="round"
                   strokeDasharray={ringCircumference}
@@ -207,10 +209,18 @@ export function DashboardPage() {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-mono font-bold text-[#0D1B2E] text-lg leading-none">
-                  {daysRemaining}
-                </span>
-                <span className="text-[9px] text-[#94A3B8] leading-none">days</span>
+                {daysRemaining === 0 ? (
+                  <span className="font-semibold text-[#E63946] text-[10px] uppercase tracking-wider leading-none">
+                    Expired
+                  </span>
+                ) : (
+                  <>
+                    <span className="font-mono font-bold text-[#0D1B2E] text-lg leading-none">
+                      {daysRemaining}
+                    </span>
+                    <span className="text-[9px] text-[#94A3B8] leading-none">days</span>
+                  </>
+                )}
               </div>
             </div>
             <div>
@@ -222,7 +232,7 @@ export function DashboardPage() {
           </div>
 
           <Link
-            to="/plans"
+            to={daysRemaining === 0 ? "/wallet" : "/plans"}
             id="active-plan-buy-btn"
             className="flex items-center justify-center gap-1.5 py-2 rounded-full border border-[#E2E8F0] text-[#0F2B5B] text-sm font-semibold hover:bg-[#0F2B5B] hover:text-white hover:border-[#0F2B5B] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none"
           >
@@ -421,11 +431,15 @@ export function DashboardPage() {
       {daysRemaining <= 7 && (
         <div className="animate-fade-up animate-delay-600">
           <AlertBanner
-            type="expiry"
-            message={`Your plan expires in ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}. Renew now to avoid interruption.`}
-            ctaLabel="Buy a Plan"
-            ctaHref="/plans"
-            dismissible
+            type={daysRemaining === 0 ? 'error' : 'expiry'}
+            message={
+              daysRemaining === 0
+                ? 'Your plan has expired. Renew now to restore access.'
+                : `Your plan expires in ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}. Renew now to avoid interruption.`
+            }
+            ctaLabel={daysRemaining === 0 ? "Go to Wallet" : "Buy a Plan"}
+            ctaHref={daysRemaining === 0 ? "/wallet" : "/plans"}
+            dismissible={daysRemaining !== 0}
           />
         </div>
       )}

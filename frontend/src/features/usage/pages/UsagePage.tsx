@@ -11,10 +11,7 @@ import {
 import { ArrowDown, ArrowUp, RefreshCw, Clock } from 'lucide-react';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SkeletonCard } from '@/components/common/SkeletonCard';
-import { mockMonthlyUsage, mockHourlyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
-
-
-type Period = 'Daily' | 'Monthly';
+import { mockMonthlyUsage, mockTodayUsage } from '@/lib/mock/mockUsage';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -58,15 +55,10 @@ const usageTableData: UsageRow[] = mockMonthlyUsage.map((d) => ({
 })).reverse();
 
 export function UsagePage() {
-  const [period, setPeriod] = useState<Period>('Monthly');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading] = useState(false);
 
-  const chartData = period === 'Daily' ? mockHourlyUsage.map((h) => ({
-    label: h.hour,
-    download: h.downloadGb,
-    upload: h.uploadGb,
-  })) : mockMonthlyUsage.map((d) => ({
+  const chartData = mockMonthlyUsage.map((d) => ({
     label: d.month,
     download: d.downloadGb,
     upload: d.uploadGb,
@@ -76,8 +68,6 @@ export function UsagePage() {
     setIsRefreshing(true);
     setTimeout(() => setIsRefreshing(false), 1500);
   }
-
-  const periods: Period[] = ['Daily', 'Monthly'];
 
   return (
     <div className="p-5 lg:p-8 max-w-screen-xl mx-auto space-y-6">
@@ -168,25 +158,6 @@ export function UsagePage() {
           <div>
             <h3 className="font-heading font-semibold text-[#0D1B2E] text-base">Usage Overview</h3>
             <p className="text-xs text-[#94A3B8] mt-0.5">Download and upload trends by month</p>
-          </div>
-
-          {/* Period toggle */}
-          <div className="flex gap-1 p-1 bg-[#F5F7FA] rounded-xl" aria-label="Usage period">
-            {periods.map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => setPeriod(p)}
-                className={[
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none',
-                  period === p
-                    ? 'bg-white text-[#0D1B2E] shadow-sm'
-                    : 'text-[#94A3B8] hover:text-[#64748B]',
-                ].join(' ')}
-              >
-                {p}
-              </button>
-            ))}
           </div>
         </div>
 

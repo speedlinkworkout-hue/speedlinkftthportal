@@ -303,7 +303,7 @@ function PlanCard({ plan, isPopular, onBuy }: PlanCardProps) {
                 <PremiumButton onClick={() => onBuy(plan)} label="Add to Queue" />
               ) : (
                 <button
-                  id={`buy-plan-${plan.id}`}
+                  id={`queue-plan-${plan.id}`}
                   onClick={() => onBuy(plan)}
                   className="w-full py-3 rounded-full border border-[#E2E8F0] text-[#0F2B5B] hover:bg-[#0F2B5B] hover:text-white focus-visible:ring-2 focus-visible:ring-[#0F2B5B] focus-visible:outline-none transition-all duration-200"
                 >
