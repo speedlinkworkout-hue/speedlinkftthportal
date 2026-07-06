@@ -1,138 +1,373 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self';" />
-    <link rel="icon" type="image/png" href="/speedlink-logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Speedlink FTTH — Manage your fiber internet subscription, check usage, top up your wallet, and get support." />
-    <title>Speedlink FTTH Portal</title>
-    <script>
-      (function () {
-        var themeStorageKey = 'speedlink-theme-store';
-        var protectedPathPrefixes = [
-          '/dashboard',
-          '/plans',
-          '/wallet',
-          '/billing',
-          '/usage',
-          '/account',
-          '/admin',
-          '/finance',
-          '/support'
-        ];
 
-        function isProtectedPath(pathname) {
-          return protectedPathPrefixes.some(function (prefix) {
-            return pathname === prefix || pathname.indexOf(prefix + '/') === 0;
-          });
-        }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self';" />
+  <link rel="icon" type="image/png" href="/speedlink-logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description"
+    content="Speedlink FTTH — Manage your fiber internet subscription, check usage, top up your wallet, and get support." />
+  <title>Speedlink FTTH Portal</title>
+  <style>
+    .splash-container {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background-color: #FAF5EF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
 
-        function readTheme() {
-          try {
-            var storedValue = window.localStorage.getItem(themeStorageKey);
-            if (!storedValue) return 'light';
+    .splash-wordmark {
+      text-align: center;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
 
-            var parsedValue = JSON.parse(storedValue);
-            return parsedValue &&
-              parsedValue.state &&
-              parsedValue.state.theme === 'dark'
-              ? 'dark'
-              : 'light';
-          } catch (error) {
-            return 'light';
-          }
-        }
+    .splash-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      line-height: 1;
+    }
 
-        function syncThemeClass() {
-          if (!isProtectedPath(window.location.pathname)) {
-            document.documentElement.classList.remove('dark');
-            return;
-          }
+    .splash-subtitle {
+      margin-top: 0.5rem;
+      color: #475569;
+      font-size: 0.875rem;
+      letter-spacing: 0.05em;
+      font-family: 'Outfit', sans-serif;
+    }
 
-          document.documentElement.classList.toggle('dark', readTheme() === 'dark');
-        }
+    .splash-loader-wrapper {
+      position: relative;
+      width: 75px;
+      height: 100px;
+    }
 
-        var classObserver = new MutationObserver(function () {
-          if (
-            !isProtectedPath(window.location.pathname) &&
-            document.documentElement.classList.contains('dark')
-          ) {
-            document.documentElement.classList.remove('dark');
-          }
+    .splash-loader__bar {
+      position: absolute;
+      bottom: 0;
+      width: 10px;
+      height: 50%;
+      background: rgb(0, 0, 0);
+      transform-origin: center bottom;
+      box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .splash-loader__bar:nth-child(1) {
+      left: 0px;
+      transform: scale(1, 0.2);
+      animation: barUp1 4s infinite;
+    }
+
+    .splash-loader__bar:nth-child(2) {
+      left: 15px;
+      transform: scale(1, 0.4);
+      animation: barUp2 4s infinite;
+    }
+
+    .splash-loader__bar:nth-child(3) {
+      left: 30px;
+      transform: scale(1, 0.6);
+      animation: barUp3 4s infinite;
+    }
+
+    .splash-loader__bar:nth-child(4) {
+      left: 45px;
+      transform: scale(1, 0.8);
+      animation: barUp4 4s infinite;
+    }
+
+    .splash-loader__bar:nth-child(5) {
+      left: 60px;
+      transform: scale(1, 1);
+      animation: barUp5 4s infinite;
+    }
+
+    .splash-loader__ball {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      background: rgb(44, 143, 255);
+      border-radius: 50%;
+      animation: ball624 4s infinite;
+    }
+
+    .splash-status {
+      color: #64748b;
+      font-size: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: 0.05em;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .5;
+      }
+    }
+
+    @keyframes ball624 {
+      0% {
+        transform: translate(0, 0);
+      }
+
+      5% {
+        transform: translate(8px, -14px);
+      }
+
+      10% {
+        transform: translate(15px, -10px);
+      }
+
+      17% {
+        transform: translate(23px, -24px);
+      }
+
+      20% {
+        transform: translate(30px, -20px);
+      }
+
+      27% {
+        transform: translate(38px, -34px);
+      }
+
+      30% {
+        transform: translate(45px, -30px);
+      }
+
+      37% {
+        transform: translate(53px, -44px);
+      }
+
+      40% {
+        transform: translate(60px, -40px);
+      }
+
+      50% {
+        transform: translate(60px, 0);
+      }
+
+      57% {
+        transform: translate(53px, -14px);
+      }
+
+      60% {
+        transform: translate(45px, -10px);
+      }
+
+      67% {
+        transform: translate(37px, -24px);
+      }
+
+      70% {
+        transform: translate(30px, -20px);
+      }
+
+      77% {
+        transform: translate(22px, -34px);
+      }
+
+      80% {
+        transform: translate(15px, -30px);
+      }
+
+      87% {
+        transform: translate(7px, -44px);
+      }
+
+      90% {
+        transform: translate(0, -40px);
+      }
+
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+
+    @keyframes barUp1 {
+
+      0%,
+      40%,
+      100% {
+        transform: scale(1, 0.2);
+      }
+
+      50%,
+      90% {
+        transform: scale(1, 1);
+      }
+    }
+
+    @keyframes barUp2 {
+
+      0%,
+      40%,
+      100% {
+        transform: scale(1, 0.4);
+      }
+
+      50%,
+      90% {
+        transform: scale(1, 0.8);
+      }
+    }
+
+    @keyframes barUp3 {
+
+      0%,
+      100% {
+        transform: scale(1, 0.6);
+      }
+    }
+
+    @keyframes barUp4 {
+
+      0%,
+      40%,
+      100% {
+        transform: scale(1, 0.8);
+      }
+
+      50%,
+      90% {
+        transform: scale(1, 0.4);
+      }
+    }
+
+    @keyframes barUp5 {
+
+      0%,
+      40%,
+      100% {
+        transform: scale(1, 1);
+      }
+
+      50%,
+      90% {
+        transform: scale(1, 0.2);
+      }
+    }
+  </style>
+  <script>
+    (function () {
+      var themeStorageKey = 'speedlink-theme-store';
+      var protectedPathPrefixes = [
+        '/dashboard',
+        '/plans',
+        '/wallet',
+        '/billing',
+        '/usage',
+        '/account',
+        '/admin',
+        '/finance',
+        '/support'
+      ];
+
+      function isProtectedPath(pathname) {
+        return protectedPathPrefixes.some(function (prefix) {
+          return pathname === prefix || pathname.indexOf(prefix + '/') === 0;
         });
+      }
 
-        var originalPushState = window.history.pushState;
-        var originalReplaceState = window.history.replaceState;
+      function readTheme() {
+        try {
+          var storedValue = window.localStorage.getItem(themeStorageKey);
+          if (!storedValue) return 'light';
 
-        window.history.pushState = function () {
-          var result = originalPushState.apply(this, arguments);
-          window.requestAnimationFrame(syncThemeClass);
-          return result;
-        };
-
-        window.history.replaceState = function () {
-          var result = originalReplaceState.apply(this, arguments);
-          window.requestAnimationFrame(syncThemeClass);
-          return result;
-        };
-
-        window.addEventListener('popstate', syncThemeClass);
-        window.addEventListener('storage', syncThemeClass);
-        classObserver.observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['class']
-        });
-        syncThemeClass();
-      })();
-    </script>
-  </head>
-  <body>
-    <div id="root">
-      <style>
-        .splash-container {
-          position: fixed; inset: 0; z-index: 9999; background-color: #FAF5EF;
-          display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+          var parsedValue = JSON.parse(storedValue);
+          return parsedValue &&
+            parsedValue.state &&
+            parsedValue.state.theme === 'dark'
+            ? 'dark'
+            : 'light';
+        } catch (error) {
+          return 'light';
         }
-        .splash-wordmark { text-align: center; user-select: none; }
-        .splash-title { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2em; line-height: 1; }
-        .splash-subtitle { margin-top: 0.5rem; color: #475569; font-size: 0.875rem; letter-spacing: 0.05em; font-family: 'Outfit', sans-serif; }
-        .splash-loader-wrapper { position: relative; width: 75px; height: 100px; }
-        .splash-loader__bar { position: absolute; bottom: 0; width: 10px; height: 50%; background: rgb(0, 0, 0); transform-origin: center bottom; box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2); }
-        .splash-loader__bar:nth-child(1) { left: 0px; transform: scale(1, 0.2); animation: barUp1 4s infinite; }
-        .splash-loader__bar:nth-child(2) { left: 15px; transform: scale(1, 0.4); animation: barUp2 4s infinite; }
-        .splash-loader__bar:nth-child(3) { left: 30px; transform: scale(1, 0.6); animation: barUp3 4s infinite; }
-        .splash-loader__bar:nth-child(4) { left: 45px; transform: scale(1, 0.8); animation: barUp4 4s infinite; }
-        .splash-loader__bar:nth-child(5) { left: 60px; transform: scale(1, 1); animation: barUp5 4s infinite; }
-        .splash-loader__ball { position: absolute; bottom: 10px; left: 0; width: 10px; height: 10px; background: rgb(44, 143, 255); border-radius: 50%; animation: ball624 4s infinite; }
-        .splash-status { color: #64748b; font-size: 0.75rem; font-family: 'Outfit', sans-serif; letter-spacing: 0.05em; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        @keyframes ball624 { 0% { transform: translate(0, 0); } 5% { transform: translate(8px, -14px); } 10% { transform: translate(15px, -10px); } 17% { transform: translate(23px, -24px); } 20% { transform: translate(30px, -20px); } 27% { transform: translate(38px, -34px); } 30% { transform: translate(45px, -30px); } 37% { transform: translate(53px, -44px); } 40% { transform: translate(60px, -40px); } 50% { transform: translate(60px, 0); } 57% { transform: translate(53px, -14px); } 60% { transform: translate(45px, -10px); } 67% { transform: translate(37px, -24px); } 70% { transform: translate(30px, -20px); } 77% { transform: translate(22px, -34px); } 80% { transform: translate(15px, -30px); } 87% { transform: translate(7px, -44px); } 90% { transform: translate(0, -40px); } 100% { transform: translate(0, 0); } }
-        @keyframes barUp1 { 0%, 40%, 100% { transform: scale(1, 0.2); } 50%, 90% { transform: scale(1, 1); } }
-        @keyframes barUp2 { 0%, 40%, 100% { transform: scale(1, 0.4); } 50%, 90% { transform: scale(1, 0.8); } }
-        @keyframes barUp3 { 0%, 100% { transform: scale(1, 0.6); } }
-        @keyframes barUp4 { 0%, 40%, 100% { transform: scale(1, 0.8); } 50%, 90% { transform: scale(1, 0.4); } }
-        @keyframes barUp5 { 0%, 40%, 100% { transform: scale(1, 1); } 50%, 90% { transform: scale(1, 0.2); } }
-      </style>
-      <div class="splash-container">
-        <div class="splash-wordmark">
-          <div class="splash-title">
-            <span style="color: #0b1b3d">SPEED</span><span style="color: #2c8fff">LINK</span>
-          </div>
-          <p class="splash-subtitle">Enjoy Unlimited Fibre Internet</p>
+      }
+
+      function syncThemeClass() {
+        if (!isProtectedPath(window.location.pathname)) {
+          document.documentElement.classList.remove('dark');
+          return;
+        }
+
+        document.documentElement.classList.toggle('dark', readTheme() === 'dark');
+      }
+
+      var classObserver = new MutationObserver(function () {
+        if (
+          !isProtectedPath(window.location.pathname) &&
+          document.documentElement.classList.contains('dark')
+        ) {
+          document.documentElement.classList.remove('dark');
+        }
+      });
+
+      var originalPushState = window.history.pushState;
+      var originalReplaceState = window.history.replaceState;
+
+      window.history.pushState = function () {
+        var result = originalPushState.apply(this, arguments);
+        window.requestAnimationFrame(syncThemeClass);
+        return result;
+      };
+
+      window.history.replaceState = function () {
+        var result = originalReplaceState.apply(this, arguments);
+        window.requestAnimationFrame(syncThemeClass);
+        return result;
+      };
+
+      window.addEventListener('popstate', syncThemeClass);
+      window.addEventListener('storage', syncThemeClass);
+      classObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+      syncThemeClass();
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root">
+    <div class="splash-container">
+      <div class="splash-wordmark">
+        <div class="splash-title">
+          <span style="color: #0b1b3d">SPEED</span><span style="color: #2c8fff">LINK</span>
         </div>
-        <div class="splash-loader-wrapper">
-          <div class="splash-loader__bar"></div>
-          <div class="splash-loader__bar"></div>
-          <div class="splash-loader__bar"></div>
-          <div class="splash-loader__bar"></div>
-          <div class="splash-loader__bar"></div>
-          <div class="splash-loader__ball"></div>
-        </div>
-        <p class="splash-status">Initializing network services...</p>
+        <p class="splash-subtitle">Enjoy Unlimited Fibre Internet</p>
       </div>
+      <div class="splash-loader-wrapper">
+        <div class="splash-loader__bar"></div>
+        <div class="splash-loader__bar"></div>
+        <div class="splash-loader__bar"></div>
+        <div class="splash-loader__bar"></div>
+        <div class="splash-loader__bar"></div>
+        <div class="splash-loader__ball"></div>
+      </div>
+      <p class="splash-status">Initializing network services...</p>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  </div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

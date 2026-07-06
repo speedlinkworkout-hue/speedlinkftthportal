@@ -11,6 +11,10 @@ const Loader = () => {
           position: relative;
           width: 75px;
           height: 100px;
+          flex: 0 0 auto;
+          overflow: visible;
+          contain: layout paint;
+          transform: translateZ(0);
         }
 
         .splash-loader__bar {
@@ -21,6 +25,8 @@ const Loader = () => {
           background: rgb(0, 0, 0);
           transform-origin: center bottom;
           box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+          backface-visibility: hidden;
+          will-change: transform;
         }
 
         .splash-loader__bar:nth-child(1) {
@@ -62,6 +68,8 @@ const Loader = () => {
           background: rgb(44, 143, 255);
           border-radius: 50%;
           animation: ball624 4s infinite;
+          backface-visibility: hidden;
+          will-change: transform;
         }
 
         @keyframes ball624 {
@@ -153,23 +161,33 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
 
   return (
     <div
+      className="fixed inset-0 z-[9999] flex h-screen w-screen flex-col items-center justify-center overflow-hidden"
       style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
+        width: '100vw',
+        height: '100vh',
+        minWidth: '100vw',
+        minHeight: '100vh',
         backgroundColor: '#FAF5EF',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
         gap: '2rem',
         opacity: fading ? 0 : 1,
         transition: fading ? 'opacity 300ms ease-out' : 'none',
         pointerEvents: fading ? 'none' : 'auto',
+        contain: 'layout paint size',
+        isolation: 'isolate',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        willChange: 'opacity',
       }}
     >
       {/* Wordmark */}
-      <div style={{ textAlign: 'center', userSelect: 'none' }}>
+      <div
+        className="flex shrink-0 flex-col items-center text-center"
+        style={{
+          width: 'min(90vw, 22rem)',
+          userSelect: 'none',
+          contain: 'layout paint',
+        }}
+      >
         <div
           style={{
             fontFamily: "'Outfit', sans-serif",
@@ -177,6 +195,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             fontWeight: 700,
             letterSpacing: '0.2em',   /* tracking-widest */
             lineHeight: 1,
+            minHeight: '1.5rem',
           }}
         >
           <span style={{ color: '#0b1b3d' }}>SPEED</span>
@@ -189,6 +208,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             fontSize: '0.875rem',      /* text-sm */
             letterSpacing: '0.05em',  /* tracking-wide */
             fontFamily: "'Outfit', sans-serif",
+            lineHeight: 1.25,
+            minHeight: '1.125rem',
           }}
         >
           Enjoy Unlimited Fibre Internet
@@ -206,6 +227,11 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           fontSize: '0.75rem',        /* text-xs */
           fontFamily: "'Outfit', sans-serif",
           letterSpacing: '0.05em',
+          lineHeight: 1.25,
+          minHeight: '1rem',
+          width: 'min(90vw, 22rem)',
+          textAlign: 'center',
+          contain: 'layout paint',
         }}
       >
         Initializing network services...
