@@ -5,6 +5,7 @@ import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { BottomNav } from './BottomNav';
 import { ThemeInitializer } from '@/components/ThemeInitializer';
+import { Footer } from './Footer';
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -61,10 +62,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Topbar onMenuOpen={() => setDrawerOpen(true)} />
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto pb-[72px] lg:pb-0"
+          className="flex-1 overflow-y-auto pb-[72px] lg:pb-0 flex flex-col"
           aria-label="Page content"
         >
-          {children}
+          <div className="flex-1">
+            {children}
+          </div>
+          <Footer />
         </main>
       </div>
 

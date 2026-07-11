@@ -15,6 +15,11 @@ const WalletPage = lazy(() => import('@/features/wallet/pages/WalletPage').then(
 
 const AccountSettingsPage = lazy(() => import('@/features/accounts/pages/AccountSettingsPage').then(m => ({ default: m.AccountSettingsPage })));
 
+const CustomerTicketsPage = lazy(() => import('@/features/support/pages/CustomerTicketsPage').then(m => ({ default: m.CustomerTicketsPage })));
+const CustomerTicketDetailPage = lazy(() => import('@/features/support/pages/CustomerTicketDetailPage').then(m => ({ default: m.CustomerTicketDetailPage })));
+const SupportQueuePage = lazy(() => import('@/features/support/pages/SupportQueuePage').then(m => ({ default: m.SupportQueuePage })));
+const SupportTicketDetailPage = lazy(() => import('@/features/support/pages/SupportTicketDetailPage').then(m => ({ default: m.SupportTicketDetailPage })));
+
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return (
     <Suspense
@@ -51,6 +56,8 @@ export const router = createBrowserRouter([
       { path: '/wallet', element: <SuspenseWrapper><WalletPage /></SuspenseWrapper> },
       { path: '/billing', element: <Navigate to="/wallet" replace /> },
       { path: '/usage', element: <SuspenseWrapper><UsagePage /></SuspenseWrapper> },
+      { path: '/support/tickets', element: <SuspenseWrapper><CustomerTicketsPage /></SuspenseWrapper> },
+      { path: '/support/tickets/:id', element: <SuspenseWrapper><CustomerTicketDetailPage /></SuspenseWrapper> },
 
       { path: '/account/settings', element: <SuspenseWrapper><AccountSettingsPage /></SuspenseWrapper> },
     ],
@@ -63,6 +70,8 @@ export const router = createBrowserRouter([
       { path: '/admin/plans', element: <StubPage title="Manage Plans" /> },
       { path: '/admin/activity', element: <StubPage title="Activity Log" /> },
       { path: '/admin/settings', element: <StubPage title="System Settings" /> },
+      { path: '/support/queue', element: <SuspenseWrapper><SupportQueuePage /></SuspenseWrapper> },
+      { path: '/support/queue/:id', element: <SuspenseWrapper><SupportTicketDetailPage /></SuspenseWrapper> },
     ],
   },
   {
@@ -80,7 +89,8 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute allowedRoles={[UserRole.SUPPORT]} />,
     children: [
       { path: '/support', element: <StubPage title="Support Dashboard" /> },
-      { path: '/support/tickets', element: <StubPage title="Ticket Queue" /> },
+      { path: '/support/queue', element: <SuspenseWrapper><SupportQueuePage /></SuspenseWrapper> },
+      { path: '/support/queue/:id', element: <SuspenseWrapper><SupportTicketDetailPage /></SuspenseWrapper> },
       { path: '/support/expiring', element: <StubPage title="Expiring Plans" /> },
       { path: '/support/usage', element: <StubPage title="Usage Monitor" /> },
     ],

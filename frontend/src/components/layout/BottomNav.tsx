@@ -4,24 +4,29 @@ import {
   Layers,
   Wallet,
   UserCircle,
+  MessageSquare,
 } from 'lucide-react';
+import { useAuthStore } from '@/stores/auth.store';
+import { UserRole } from '@/types/user.types';
 
 interface BottomNavItem {
   label: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
+  allowedRoles?: UserRole[];
 }
 
 const bottomNavItems: BottomNavItem[] = [
   { label: 'Home',    href: '/dashboard', icon: LayoutDashboard },
   { label: 'Plans',   href: '/plans',     icon: Layers },
   { label: 'Wallet',  href: '/wallet',    icon: Wallet },
-
+  { label: 'Support', href: '/support/tickets', icon: MessageSquare, allowedRoles: [UserRole.CUSTOMER] },
   { label: 'Account', href: '/account/settings', icon: UserCircle },
 ];
 
 export function BottomNav() {
   const location = useLocation();
+  const { user } = useAuthStore();
 
   return (
     <nav
@@ -29,7 +34,12 @@ export function BottomNav() {
       className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E2E8F0] bg-white transition-colors duration-200 dark:border-gray-800 dark:bg-gray-900 lg:hidden pb-safe"
     >
       <div className="flex items-stretch">
-        {bottomNavItems.map((item) => {
+        {bottomNavItems.filter(item => {
+          // If no allowedRoles specified, show for all
+          if (!item.allowedRoles) return true;
+          // Otherwise, check if user's role is in allowedRoles
+          return item.allowedRoles.includes(user?.role as UserRole);
+        }).map((item) => {
           const Icon = item.icon;
           const isActive =
             item.href === '/dashboard'

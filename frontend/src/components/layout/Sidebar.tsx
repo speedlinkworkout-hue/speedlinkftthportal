@@ -6,15 +6,19 @@ import {
   Wallet,
   Settings,
   LogOut,
+  MessageSquare,
+  Headphones,
 } from 'lucide-react';
 const LogoSrc = '/speedlink-logo.png';
 import { useAuthStore } from '@/stores/auth.store';
 import { WalletBalanceWidget } from '@/components/dashboard/WalletBalanceWidget';
+import { UserRole } from '@/types/user.types';
 
 interface NavItem {
   label: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
+  allowedRoles?: UserRole[];
 }
 
 const navItems: NavItem[] = [
@@ -22,7 +26,8 @@ const navItems: NavItem[] = [
   { label: 'My Plans',        href: '/plans',            icon: Layers },
   { label: 'Usage',           href: '/usage',            icon: Activity },
   { label: 'Wallet & Billing',href: '/wallet',           icon: Wallet },
-
+  { label: 'Support',         href: '/support/tickets',  icon: MessageSquare, allowedRoles: [UserRole.CUSTOMER] },
+  { label: 'Ticket Queue',    href: '/support/queue',     icon: Headphones, allowedRoles: [UserRole.SUPPORT, UserRole.ADMIN] },
   { label: 'Account Settings',href: '/account/settings', icon: Settings },
 ];
 
@@ -56,7 +61,12 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto scrollbar-thin" aria-label="Main navigation">
-        {navItems.map((item) => {
+        {navItems.filter(item => {
+          // If no allowedRoles specified, show for all
+          if (!item.allowedRoles) return true;
+          // Otherwise, check if user's role is in allowedRoles
+          return item.allowedRoles.includes(user?.role as UserRole);
+        }).map((item) => {
           const Icon = item.icon;
           const isActive =
             item.href === '/dashboard'

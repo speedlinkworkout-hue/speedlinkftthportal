@@ -1,5 +1,4 @@
-import { useLocation } from 'react-router-dom';
-import { Bell } from 'lucide-react';
+import { useLocation, Link } from 'react-router-dom';
 const LogoSrc = '/speedlink-logo.png';
 import { useAuthStore } from '@/stores/auth.store';
 import { MultiAccountSwitcher } from '@/components/common/MultiAccountSwitcher';
@@ -10,6 +9,8 @@ const pageTitles: Record<string, string> = {
   '/plans':           'My Plans',
   '/usage':           'Usage',
   '/wallet':          'Wallet & Billing',
+  '/support/tickets': 'My Tickets',
+  '/support/queue':   'Ticket Queue',
 
   '/account/settings':'Account Settings',
 };
@@ -67,27 +68,15 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
 
         <ThemeToggle />
 
-        {/* Notification bell */}
-        <button
-          id="notification-bell"
-          aria-label="Notifications (2 unread)"
-          className="relative rounded-xl p-2 text-[#64748B] transition-all duration-200 hover:bg-[#F5F7FA] hover:text-[#0F2B5B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F2B5B] dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
-        >
-          <Bell className="w-5 h-5" aria-hidden="true" />
-          <span
-            className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-white bg-[#E63946] dark:border-gray-900"
-            aria-hidden="true"
-          />
-        </button>
-
         {/* User avatar */}
-        <div
-          className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#0F2B5B] text-xs font-semibold text-white dark:bg-primary"
+        <Link
+          to="/account/settings"
+          className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#0F2B5B] text-xs font-semibold text-white dark:bg-primary transition-transform hover:scale-105"
           title={user ? `${user.firstName} ${user.lastName}` : 'User'}
-          aria-hidden="true"
+          aria-label="Account Settings"
         >
           {initials}
-        </div>
+        </Link>
       </div>
 
       {/* Mobile centered logo */}
